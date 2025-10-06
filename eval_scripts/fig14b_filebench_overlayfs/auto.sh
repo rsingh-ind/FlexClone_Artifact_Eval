@@ -191,9 +191,9 @@ do
 			echo "Created $upper"
 			mkdir $merged
 			echo "Created $merged"
-			cd $merged
-			cd ..
-			find . -maxdepth 1 -type f -exec rm -f {} \;	#delete friend files
+			#cd $merged
+			#cd ..
+			#find . -maxdepth 1 -type f -exec rm -f {} \;	#delete friend files
 		done
 	done
 	cd $curdir
@@ -221,3 +221,9 @@ do
 	echo "dropping caches"
 	sync; echo 3 > /proc/sys/vm/drop_caches
 done
+
+cd output
+./gen_output.sh
+gnuplot plot_fioseqread.p
+epstopdf ssd_out_filebench_child_ops_per_sec.eps
+cp ssd_out_filebench_child_ops_per_sec.pdf ..
