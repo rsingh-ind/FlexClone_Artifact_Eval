@@ -39,12 +39,16 @@ then
 	exit -1
 fi
 
-cp filebench /usr/local/bin/filebench
+#cp filebench /usr/local/bin/filebench
+curdir=$(pwd)
+cd "../eval_scripts/fig14b_filebench_overlayfs/filebench_src/filebench-1.5-alpha1"
+make install
 if [ $? != 0 ]
 then
 	echo "**** Failed to install filebench ****"
 	exit -1
 fi
+cd $curdir
 
 yes | apt install ./jdk-21_linux-x64_bin.deb
 if [ $? != 0 ]
