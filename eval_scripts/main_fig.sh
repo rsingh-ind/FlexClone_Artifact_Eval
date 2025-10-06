@@ -10,7 +10,7 @@ if [ $# != 2 ]
 then
 	echo "Usage: $0 <figure number> <iterations>"
 	echo ""
-	echo "Valid figure numbers: < 8, 9a, 9b, 10a, 10b, 11, 12, 13a, 13b, 1 >"
+	echo "Valid figure numbers (comma separated list): 8, 9a, 9b, 10a, 10b, 11, 12, 13a, 13b, 14b, 15a, 15b"
 	echo "Iterations indicates number of times the experiment should be rerun before"
 	echo "generating the mean and std. dev. results."
 	echo ""
@@ -105,5 +105,5 @@ then
 	./auto.sh $2 | tee "log_$(date +%Y%m%d_%H%M%S)"
 else
 	echo "Invalid figure number"
-	echo "Valid figure numbers (comma separated list): 8, 9a, 9b, 10a, 10b, 11, 12, 13a, 13b, 15a, 15b"
+	echo "Valid figure numbers (comma separated list): 8, 9a, 9b, 10a, 10b, 11, 12, 13a, 13b, 14b, 15a, 15b"
 fi
