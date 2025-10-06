@@ -1,8 +1,0 @@
-# M=mean, SD=std. dev.
-#		Btrfs		Btrfs		Ext4	Ext4	XFS		XFS	FlexClone	FlexClone
-#		M		SD		M	SD	M	    SD		M		SD
-#Units: ops/sec
-
-      append      766.90        0.00       50.06        1.51      766.90        0.01      766.90        0.01
-  fileserver    33779.43      415.00    83246.03     2251.68    40988.74      358.35    79526.98     2215.98
-     varmail      818.52        1.51     8306.55        6.28     5210.44       38.66     7923.39      123.41

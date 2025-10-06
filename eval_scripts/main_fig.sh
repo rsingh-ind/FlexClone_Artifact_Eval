@@ -83,6 +83,13 @@ then
 	cd $work_dir
 	./global_init_all_singlethread.sh $2 | tee "log_$(date +%Y%m%d_%H%M%S)"
 
+elif [ $1 == "14b" ] 
+then
+	echo "Fig 14b chosen"
+	work_dir="fig14b_filebench_overlayfs"	
+	cd $work_dir
+	./auto.sh $2 | tee "log_$(date +%Y%m%d_%H%M%S)"
+
 elif [ $1 == "15a" ] 
 then
 	echo "Fig 15a chosen"

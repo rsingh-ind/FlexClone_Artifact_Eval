@@ -16,7 +16,13 @@ do
 	for fs in ${filesystem[@]}
 	do
 		#sample input file name: btrfs_fileserver_stage2.f
-		./extract_mean_throughput.sh "${fs}_${wl}_stage2.f" $plot_name
+		file="${fs}_${wl}_stage2.f"
+		if [ ! -f $file ] || [ ! -s $file ]; then
+			echo "Error: $file does not exist or is empty"
+			continue
+		fi
+
+		./extract_mean_throughput.sh $file $plot_name
 	done
 	printf "\n" >> "$plot_name"
 done
