@@ -635,6 +635,39 @@ FlexClone_Artifact_Eval/eval_scripts# ./main_fig.sh 13b 1 	//Run single iteratio
 ```
 (Jump to: [Figures](#figures), [Tables](#tables))
 
+---
+### Figure 14b
+
+*Experiment Goal:*
+```
+Observe the performance of various filesystems with OverlayFS for Filebench workloads.
+```
+
+*Command:*
+```
+FlexClone_Artifact_Eval/eval_scripts# ./main_fig.sh 14b 1 	//Run single iteration of the experiment
+```
+*Estimated Runtime:*
+```
+120 mins of total time for the single iteration of the experiment
+```
+
+*Script actions:*
+```
+- For Ext4, XFS, Btrfs, FlexClone
+	- Mount filesystem
+	- Copy helper scripts into the mount point
+	- Run Filebench workloads to generate files in lower layer
+	- Mount OverlayFS
+	- Run Filebench workloads on files visible in merged directory 
+```
+*Results:*
+```
+- Results and corresponding plot are stored in "FlexClone_Artifact_Eval/eval_scripts/ffig14b_filebench_overlayfsl/output" directory
+- For ease of access, plot is copied to "FlexClone_Artifact_Eval/eval_scripts/fig14b_filebench_overlayfs" directory
+- Log file for the experiment is stored in  "FlexClone_Artifact_Eval/eval_scripts/fig14b_filebench_overlayfs" directory with experiment timestamp being the name of the log file (Eg: log_20250926_181210).
+```
+(Jump to: [Figures](#figures), [Tables](#tables))
 
 ---
 ### Figure 15a
