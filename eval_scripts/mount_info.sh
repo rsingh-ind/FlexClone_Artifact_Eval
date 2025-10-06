@@ -11,16 +11,16 @@ fi
 # SSD
 ##################################
 BTRFS_SSD_MOUNT_POINT="/btrfs/"
-BTRFS_SSD_MOUNT_DEVICE="/dev/vdb1"
+BTRFS_SSD_MOUNT_DEVICE="/dev/nvme0n1p1"
 
 EXT4_SSD_MOUNT_POINT="/ext4/"
-EXT4_SSD_MOUNT_DEVICE="/dev/vdb2"
+EXT4_SSD_MOUNT_DEVICE="/dev/nvme0n1p2"
 
 DCOPY_SSD_MOUNT_POINT="/flexclone/"
-DCOPY_SSD_MOUNT_DEVICE="/dev/vdb3"
+DCOPY_SSD_MOUNT_DEVICE="/dev/nvme0n1p3"
 
 XFS_SSD_MOUNT_POINT="/xfs/"
-XFS_SSD_MOUNT_DEVICE="/dev/vdb5"
+XFS_SSD_MOUNT_DEVICE="/dev/nvme0n1p5"
 
 ##################################
 # mount, umount commands for SSD

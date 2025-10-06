@@ -14,7 +14,7 @@ curdir=$(pwd)
 outPath="${curdir}/output/"
 
 dev="ssd"
-fs=("ext4" "dcopy")
+fs=("ext4" "flexclone")
 #fs=("btrfs" "btrfs" "xfs" "xfs")	#We want to run btrfs and xfs twice. One for generating o/p for vanilla sqlite and once for our modified sqlite
 fs_sub_case=1				#If fs_sub_case=1, means generating o/p for vanilla sqlite for btrfs and xfs
 					#If fs_sub_case=2, means generating o/p for our modified sqlite for btrfs and xfs
@@ -124,7 +124,7 @@ do
         echo "copying benchbase to $i filesystem"
 	cp -r $benchbase_root $dest
 
-	if [ $i == "dcopy" ]
+	if [ $i == "flexclone" ]
 	then
 		echo "copying zip file containing sqlite library to $i filesystem"
 		cp "sqlite_libraries/modified/sqlite-jdbc-3.42.0.0.jar" "${dest}/${benchbase_lib}"
@@ -179,7 +179,7 @@ do
 			    fi
 			fi
 
-			if [ $i == "dcopy" ]
+			if [ $i == "flexclone" ]
 			then
 				echo "Re-inserting ext4-module"
 				cd $module_path

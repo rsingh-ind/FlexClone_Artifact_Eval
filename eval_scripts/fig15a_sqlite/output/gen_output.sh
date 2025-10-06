@@ -1,7 +1,7 @@
 #!/bin/bash
-#filesystem=("ext4" "dcopy" "btrfsVanilla" "btrfsModified" "xfsVanilla" "xfsModified")
-#filesystem=("ext4" "dcopy" "xfsVanilla" "xfsModified")
-filesystem=("ext4" "dcopy")
+#filesystem=("ext4" "flexclone" "btrfsVanilla" "btrfsModified" "xfsVanilla" "xfsModified")
+#filesystem=("ext4" "flexclone" "xfsVanilla" "xfsModified")
+filesystem=("ext4" "flexclone")
 workload=("tpcc" "epinions" "twitter")
 
 plot_name="sqlite_summary"
@@ -17,7 +17,7 @@ do
 	printf "%24s" $wl >> "$plot_name"
 	for fs in ${filesystem[@]}
 	do
-		if [ $fs == "ext4" ] || [ $fs == "dcopy" ]
+		if [ $fs == "ext4" ] || [ $fs == "flexclone" ]
 		then
 			#sample input file name: out_ext4_twitter
 			file="out_${fs}_${wl}"

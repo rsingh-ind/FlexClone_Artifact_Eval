@@ -23,6 +23,7 @@
 #include <trace/events/writeback.h>
 #include "internal.h"
 #include "ext4-module/corw_sparse.h"
+#include "ext4-module/ext4.h"
 
 //scorw start
 LIST_HEAD(wait_for_commit_list); //list containing info about frnd inodes associated with child inodes waiting for commit 
@@ -42,6 +43,17 @@ EXPORT_SYMBOL(unlink_child_file);
 
 int (*unlink_par_file)(struct inode *inode) = NULL;
 EXPORT_SYMBOL(unlink_par_file);
+
+extern int (*is_par_inode)(struct inode* inode, int consult_extended_attributes);
+
+static int is_ext4_module_sb(struct super_block *sb)
+{
+        if(strcmp(sb->s_type->name, "ext4-module") == 0)
+        {
+                return 1;
+        }
+        return 0;
+}
 //scorw end
 
 /*
@@ -2366,9 +2378,18 @@ static void __wait_on_freeing_inode(struct inode *inode)
 	wq = bit_waitqueue(&inode->i_state, __I_NEW);
 	prepare_to_wait(wq, &wait.wq_entry, TASK_UNINTERRUPTIBLE);
 	spin_unlock(&inode->i_lock);
+        if(is_ext4_module_sb(inode->i_sb) && (inode->i_ino != 0) && is_par_inode && (is_par_inode(inode, 1)))
+        {
+                mutex_unlock(&(inode->i_vfs_inode_writeback_sync_lock));
+        }
+
 	spin_unlock(&inode_hash_lock);
 	schedule();
 	finish_wait(wq, &wait.wq_entry);
+        if(is_ext4_module_sb(inode->i_sb) && (inode->i_ino != 0) && is_par_inode && (is_par_inode(inode, 1)))
+        {
+                mutex_lock(&(inode->i_vfs_inode_writeback_sync_lock));
+        }
 	spin_lock(&inode_hash_lock);
 }
 

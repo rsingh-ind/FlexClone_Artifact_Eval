@@ -1,5 +1,5 @@
 #!/bin/bash
-filesystem=("btrfs" "ext4" "xfs" "dcopy")
+filesystem=("btrfs" "ext4" "xfs" "flexclone")
 workload=("micro_append" "fileserver" "varmail")
 
 plot_name="ssd_out_filebench_child_ops_per_sec"

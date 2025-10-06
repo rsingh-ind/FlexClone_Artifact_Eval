@@ -23,6 +23,8 @@ then
 fi
 
 
+#fs=("flexclone" "btrfs" "xfs" "ext4")
+#workload=("micro_append_stage1.f" "micro_append_stage2.f" "fileserver_stage1.f" "fileserver_stage2.f" "varmail_stage1.f" "varmail_stage2.f")
 fs=("flexclone" "btrfs" "xfs" "ext4")
 workload=("micro_append_stage1.f" "micro_append_stage2.f" "fileserver_stage1.f" "fileserver_stage2.f" "varmail_stage1.f" "varmail_stage2.f")
 curdir=$(pwd)
@@ -189,6 +191,9 @@ do
 			echo "Created $upper"
 			mkdir $merged
 			echo "Created $merged"
+			cd $merged
+			cd ..
+			find . -maxdepth 1 -type f -exec rm -f {} \;	#delete friend files
 		done
 	done
 	cd $curdir

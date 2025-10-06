@@ -25,7 +25,7 @@ echo "################################################"
 echo "Installing dependencies.."
 echo "Tentative time for completion: 30 mins"
 echo "################################################"
-yes | apt install git bc binutils bison dwarves flex gcc git gnupg2 gzip libelf-dev libncurses5-dev libssl-dev make openssl pahole perl-base rsync tar xz-utils vim btrfs-progs fio qemu-system-x86 gnuplot-x11 texlive-font-utils git-lfs 1>>$log
+yes | apt install git bc binutils bison dwarves flex gcc git gnupg2 gzip libelf-dev libncurses5-dev libssl-dev make openssl pahole perl-base rsync tar xz-utils vim btrfs-progs fio qemu-system-x86 gnuplot-x11 texlive-font-utils git-lfs fdisk 1>>$log
 if [ $? != 0 ]
 then
 	echo "**** Failed to install dependencies ****"

@@ -19,8 +19,8 @@ fs=("xfs" "xfs")
 #fs=("btrfs" "btrfs" "xfs" "xfs")	#We want to run btrfs and xfs twice. One for generating o/p for vanilla sqlite and once for our modified sqlite
 fs_sub_case=1				#If fs_sub_case=1, means generating o/p for vanilla sqlite for btrfs and xfs
 					#If fs_sub_case=2, means generating o/p for our modified sqlite for btrfs and xfs
-#workload=("twitter" "tpcc"  "epinions")
-workload=("twitter" "epinions")
+workload=("twitter" "tpcc"  "epinions")
+#workload=("twitter" "epinions")
 module_path=$(../module_info.sh)
 
 
