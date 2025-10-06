@@ -1,0 +1,10 @@
+[randRead]
+rw=randread
+size=8g
+ioengine=sync
+invalidate=0
+allow_file_create=0
+thread
+numjobs=32
+bs=4096
+filename=8GB_child

@@ -1,0 +1,7 @@
+* Place "auto_gen_sqlite_lib.sh" in "sqlite-jdbc". This script assumes sqlite-jdbc is present on my lab machine. This script downloads sqlite source code from 216 server
+  and generates the sqlite library.
+
+* Place "auto_recreate_jar.sh" in "benchbase/target/benchbase-sqlite/lib". It takes the sqlite library and creates a jar file which will be used by the benchbase
+  to run the workloads
+
+* Place "auto_run_benchbase_workload.sh" in "benchbase/target/benchbase-sqlite". It runs the benchbase workloads i.e. sqlite ops are performed on specified workload s.a. tpcc.

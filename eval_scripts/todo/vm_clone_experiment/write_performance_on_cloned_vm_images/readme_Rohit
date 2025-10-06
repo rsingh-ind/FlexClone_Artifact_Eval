@@ -1,0 +1,60 @@
+Experiment
+==========
+(auto1.sh) Ext4:
+	In this experiment, we have a base image of type qcow2.
+	Then, we create a clone of the base image using  $qemu-img create -f qcow2 -b $base_file $snapshot.
+	Then, we boot the cloned vm and write to a 8GB file inside the cloned vm using Fio in direct-io mode.
+
+(auto1.sh) XFS, Btrfs, ourExt4:
+	In this experiment, we have a base image of type raw.
+	(Note: Use following command to convert a qcow2 image to raw image "qemu-img convert -f qcow2 -O raw image.qcow2 image.img")
+	Then, we create a clone of the base image using setxattr or cp --reflink
+	Then, we boot the cloned vm and write to a 8GB file inside the cloned vm using Fio in direct-io mode.
+
+(auto2.sh) Ext4-raw:
+	In this experiment, we have a base image of type raw.
+	Then, we boot the raw image and write to a 8GB file inside the cloned vm using Fio in direct-io mode.
+	(We try to show the best achievable performance possible inside vm if qcow2, FlexSnap overheads are not there.)
+
+
+
+Setup
+=====
+* Looks like install_vm.sh is used to install OS on base image.
+* base-image-full.img is the base qcow2 image. It's username is rohitvm and passwd is 1.	(ssh -p 5555 rohitvm@localhost)
+* Run base image using remote.sh. Use $sudo shutdown now, inside the vm corresponding the base image to shut it down.
+* Add all required files in base image
+* Once base image is ready, create its clone: $qemu-img create -f qcow2 -o backing_file=<base img> Output_Win2k.qcow2
+	Note: snapshot_time.sh does this automatically (creation of clone)
+
+* Run clone image using remote.sh. (Change disk image name (disk_image=xyz) to the clone image before running remote.sh).
+* Run experiment in clone image and record the numbers.
+* Run snapshot_time.sh after each experiment to create a fresh snapshot.
+* Note: 
+	For ourExt4, convert qcow2 base image to raw image first.
+
+
+=============================
+Automation of the experiment:
+=============================
+* Let's assume that
+	- qcow2 base image is downloaded in the directory path "<ssd mount point for Ext4>/qemu-image-full/" (Eg: /home/rohit/ssdOrigExt4/qemu-image-full/)
+	  and raw base image is downloaded in the directory path "<ssd mount point for ourExt4>/qemu-image-full/" 
+
+	- Name of the base image is "base-image-full.img"
+
+	- Base image contains "8GB" file in ~/Downloads/ directory along with the fio files to run.
+
+* auto.sh is the driver script. It internally uses snapshot_time.sh and remote.sh scripts.
+* Fio output is saved in fio_output directory. Run gen_plots_input_file_single_thread.sh script inside this directory 
+  to process the fio results and provide the summary of the results in ssd_coldCache file.
+
+=====
+Note:
+=====
+* Base image is already prepared and present in "~/origExt4/qemu-image-full/" directory. It is in qcow2 format.
+* We are running fio on 8GB file.
+* We use 'direct-io' while running the fio inside the vm. Default cache mode used by qemu is 'writeback mode'. We are using 'direct-io' mode, so that, write ops inside vm
+  donot remain cached. Instead, changes should get flushed to host. This will help to expose the overheads of qemu while handling writes. We donot change the cache mode used by qemu.
+* Since, we did fio tests on host with 32GB ram and 8GB file, we will do similar for vm i.e. assign 16GB ram to vm and run experiments on 8GB file.
+

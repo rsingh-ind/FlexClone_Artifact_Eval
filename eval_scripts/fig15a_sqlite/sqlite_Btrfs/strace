@@ -1,0 +1,265 @@
+execve("./sqlite3", ["./sqlite3", "product.db"], 0x7ffc13021768 /* 26 vars */) = 0
+brk(NULL)                               = 0x557a68034000
+access("/etc/ld.so.nohwcap", F_OK)      = -1 ENOENT (No such file or directory)
+access("/etc/ld.so.preload", R_OK)      = -1 ENOENT (No such file or directory)
+openat(AT_FDCWD, "/usr/local/lib/tls/haswell/x86_64/libm.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+stat("/usr/local/lib/tls/haswell/x86_64", 0x7ffd09fc2660) = -1 ENOENT (No such file or directory)
+openat(AT_FDCWD, "/usr/local/lib/tls/haswell/libm.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+stat("/usr/local/lib/tls/haswell", 0x7ffd09fc2660) = -1 ENOENT (No such file or directory)
+openat(AT_FDCWD, "/usr/local/lib/tls/x86_64/libm.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+stat("/usr/local/lib/tls/x86_64", 0x7ffd09fc2660) = -1 ENOENT (No such file or directory)
+openat(AT_FDCWD, "/usr/local/lib/tls/libm.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+stat("/usr/local/lib/tls", 0x7ffd09fc2660) = -1 ENOENT (No such file or directory)
+openat(AT_FDCWD, "/usr/local/lib/haswell/x86_64/libm.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+stat("/usr/local/lib/haswell/x86_64", 0x7ffd09fc2660) = -1 ENOENT (No such file or directory)
+openat(AT_FDCWD, "/usr/local/lib/haswell/libm.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+stat("/usr/local/lib/haswell", 0x7ffd09fc2660) = -1 ENOENT (No such file or directory)
+openat(AT_FDCWD, "/usr/local/lib/x86_64/libm.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+stat("/usr/local/lib/x86_64", 0x7ffd09fc2660) = -1 ENOENT (No such file or directory)
+openat(AT_FDCWD, "/usr/local/lib/libm.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+stat("/usr/local/lib", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
+openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
+fstat(3, {st_mode=S_IFREG|0644, st_size=83927, ...}) = 0
+mmap(NULL, 83927, PROT_READ, MAP_PRIVATE, 3, 0) = 0x7f2c62f56000
+close(3)                                = 0
+access("/etc/ld.so.nohwcap", F_OK)      = -1 ENOENT (No such file or directory)
+openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libm.so.6", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\3\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\200\272\0\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0644, st_size=1700792, ...}) = 0
+mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f2c62f54000
+mmap(NULL, 3789144, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f2c629a4000
+mprotect(0x7f2c62b41000, 2093056, PROT_NONE) = 0
+mmap(0x7f2c62d40000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x19c000) = 0x7f2c62d40000
+close(3)                                = 0
+openat(AT_FDCWD, "/usr/local/lib/libdl.so.2", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+access("/etc/ld.so.nohwcap", F_OK)      = -1 ENOENT (No such file or directory)
+openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libdl.so.2", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0P\16\0\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0644, st_size=14560, ...}) = 0
+mmap(NULL, 2109712, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f2c627a0000
+mprotect(0x7f2c627a3000, 2093056, PROT_NONE) = 0
+mmap(0x7f2c629a2000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x2000) = 0x7f2c629a2000
+close(3)                                = 0
+openat(AT_FDCWD, "/usr/local/lib/libz.so.1", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+access("/etc/ld.so.nohwcap", F_OK)      = -1 ENOENT (No such file or directory)
+openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libz.so.1", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\220\37\0\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0644, st_size=116960, ...}) = 0
+mmap(NULL, 2212016, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f2c62583000
+mprotect(0x7f2c6259f000, 2093056, PROT_NONE) = 0
+mmap(0x7f2c6279e000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x1b000) = 0x7f2c6279e000
+close(3)                                = 0
+openat(AT_FDCWD, "/usr/local/lib/libpthread.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+access("/etc/ld.so.nohwcap", F_OK)      = -1 ENOENT (No such file or directory)
+openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libpthread.so.0", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0000b\0\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=144976, ...}) = 0
+mmap(NULL, 2221184, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f2c62364000
+mprotect(0x7f2c6237e000, 2093056, PROT_NONE) = 0
+mmap(0x7f2c6257d000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x19000) = 0x7f2c6257d000
+mmap(0x7f2c6257f000, 13440, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7f2c6257f000
+close(3)                                = 0
+openat(AT_FDCWD, "/usr/local/lib/libc.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+access("/etc/ld.so.nohwcap", F_OK)      = -1 ENOENT (No such file or directory)
+openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libc.so.6", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\3\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\240\35\2\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=2030928, ...}) = 0
+mmap(NULL, 4131552, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f2c61f73000
+mprotect(0x7f2c6215a000, 2097152, PROT_NONE) = 0
+mmap(0x7f2c6235a000, 24576, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x1e7000) = 0x7f2c6235a000
+mmap(0x7f2c62360000, 15072, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7f2c62360000
+close(3)                                = 0
+mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f2c62f52000
+arch_prctl(ARCH_SET_FS, 0x7f2c62f530c0) = 0
+mprotect(0x7f2c6235a000, 16384, PROT_READ) = 0
+mprotect(0x7f2c6257d000, 4096, PROT_READ) = 0
+mprotect(0x7f2c6279e000, 4096, PROT_READ) = 0
+mprotect(0x7f2c629a2000, 4096, PROT_READ) = 0
+mprotect(0x7f2c62d40000, 4096, PROT_READ) = 0
+mprotect(0x557a66411000, 20480, PROT_READ) = 0
+mprotect(0x7f2c62f6b000, 4096, PROT_READ) = 0
+munmap(0x7f2c62f56000, 83927)           = 0
+set_tid_address(0x7f2c62f53390)         = 13294
+set_robust_list(0x7f2c62f533a0, 24)     = 0
+rt_sigaction(SIGRTMIN, {sa_handler=0x7f2c62369cb0, sa_mask=[], sa_flags=SA_RESTORER|SA_SIGINFO, sa_restorer=0x7f2c62376980}, NULL, 8) = 0
+rt_sigaction(SIGRT_1, {sa_handler=0x7f2c62369d50, sa_mask=[], sa_flags=SA_RESTORER|SA_RESTART|SA_SIGINFO, sa_restorer=0x7f2c62376980}, NULL, 8) = 0
+rt_sigprocmask(SIG_UNBLOCK, [RTMIN RT_1], NULL, 8) = 0
+prlimit64(0, RLIMIT_STACK, NULL, {rlim_cur=8192*1024, rlim_max=RLIM64_INFINITY}) = 0
+ioctl(2, TCGETS, 0x7ffd09fc1c60)        = -1 ENOTTY (Inappropriate ioctl for device)
+ioctl(1, TCGETS, {B38400 opost isig icanon echo ...}) = 0
+ioctl(0, TCGETS, {B38400 opost isig icanon echo ...}) = 0
+rt_sigaction(SIGINT, {sa_handler=0x557a660d8900, sa_mask=[INT], sa_flags=SA_RESTORER|SA_RESTART, sa_restorer=0x7f2c61fb1f10}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+brk(NULL)                               = 0x557a68034000
+brk(0x557a68055000)                     = 0x557a68055000
+access("product.db", F_OK)              = 0
+openat(AT_FDCWD, "product.db", O_RDONLY) = 3
+fstat(3, {st_mode=S_IFREG|0644, st_size=8192, ...}) = 0
+read(3, "SQLite format 3\0\20\0\1\1\0@  \0\0\0\5\0\0\0\2"..., 4096) = 4096
+close(3)                                = 0
+getcwd("/oldhome/rohit/ssdBtrfs/sqlite/Btrfs_sqlite/build", 4096) = 50
+lstat("/oldhome", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
+lstat("/oldhome/rohit", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
+lstat("/oldhome/rohit/ssdBtrfs", {st_mode=S_IFDIR|0755, st_size=54, ...}) = 0
+lstat("/oldhome/rohit/ssdBtrfs/sqlite", {st_mode=S_IFDIR|0775, st_size=24, ...}) = 0
+lstat("/oldhome/rohit/ssdBtrfs/sqlite/Btrfs_sqlite", {st_mode=S_IFDIR|0775, st_size=60, ...}) = 0
+lstat("/oldhome/rohit/ssdBtrfs/sqlite/Btrfs_sqlite/build", {st_mode=S_IFDIR|0775, st_size=4480, ...}) = 0
+lstat("/oldhome/rohit/ssdBtrfs/sqlite/Btrfs_sqlite/build/product.db", {st_mode=S_IFREG|0644, st_size=8192, ...}) = 0
+getpid()                                = 13294
+getpid()                                = 13294
+openat(AT_FDCWD, "/oldhome/rohit/ssdBtrfs/sqlite/Btrfs_sqlite/build/product.db", O_RDWR|O_CREAT|O_NOFOLLOW|O_CLOEXEC, 0644) = 3
+fstat(3, {st_mode=S_IFREG|0644, st_size=8192, ...}) = 0
+fstat(3, {st_mode=S_IFREG|0644, st_size=8192, ...}) = 0
+stat("/oldhome/rohit/ssdBtrfs/sqlite/Btrfs_sqlite/build/product.db", {st_mode=S_IFREG|0644, st_size=8192, ...}) = 0
+pread64(3, "SQLite format 3\0\20\0\1\1\0@  \0\0\0\5\0\0\0\2"..., 100, 0) = 100
+getuid()                                = 1001
+socket(AF_UNIX, SOCK_STREAM|SOCK_CLOEXEC|SOCK_NONBLOCK, 0) = 4
+connect(4, {sa_family=AF_UNIX, sun_path="/var/run/nscd/socket"}, 110) = -1 ENOENT (No such file or directory)
+close(4)                                = 0
+socket(AF_UNIX, SOCK_STREAM|SOCK_CLOEXEC|SOCK_NONBLOCK, 0) = 4
+connect(4, {sa_family=AF_UNIX, sun_path="/var/run/nscd/socket"}, 110) = -1 ENOENT (No such file or directory)
+close(4)                                = 0
+openat(AT_FDCWD, "/etc/nsswitch.conf", O_RDONLY|O_CLOEXEC) = 4
+fstat(4, {st_mode=S_IFREG|0644, st_size=556, ...}) = 0
+read(4, "# /etc/nsswitch.conf\n#\n# Example"..., 4096) = 556
+read(4, "", 4096)                       = 0
+close(4)                                = 0
+openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 4
+fstat(4, {st_mode=S_IFREG|0644, st_size=83927, ...}) = 0
+mmap(NULL, 83927, PROT_READ, MAP_PRIVATE, 4, 0) = 0x7f2c62f56000
+close(4)                                = 0
+access("/etc/ld.so.nohwcap", F_OK)      = -1 ENOENT (No such file or directory)
+openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libnss_compat.so.2", O_RDONLY|O_CLOEXEC) = 4
+read(4, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\240\22\0\0\0\0\0\0"..., 832) = 832
+fstat(4, {st_mode=S_IFREG|0644, st_size=39744, ...}) = 0
+mmap(NULL, 2136256, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 4, 0) = 0x7f2c61d69000
+mprotect(0x7f2c61d71000, 2097152, PROT_NONE) = 0
+mmap(0x7f2c61f71000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 4, 0x8000) = 0x7f2c61f71000
+close(4)                                = 0
+mprotect(0x7f2c61f71000, 4096, PROT_READ) = 0
+munmap(0x7f2c62f56000, 83927)           = 0
+openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 4
+fstat(4, {st_mode=S_IFREG|0644, st_size=83927, ...}) = 0
+mmap(NULL, 83927, PROT_READ, MAP_PRIVATE, 4, 0) = 0x7f2c62f56000
+close(4)                                = 0
+access("/etc/ld.so.nohwcap", F_OK)      = -1 ENOENT (No such file or directory)
+openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libnss_nis.so.2", O_RDONLY|O_CLOEXEC) = 4
+read(4, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0p \0\0\0\0\0\0"..., 832) = 832
+fstat(4, {st_mode=S_IFREG|0644, st_size=47576, ...}) = 0
+mmap(NULL, 2143624, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 4, 0) = 0x7f2c61b5d000
+mprotect(0x7f2c61b68000, 2093056, PROT_NONE) = 0
+mmap(0x7f2c61d67000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 4, 0xa000) = 0x7f2c61d67000
+close(4)                                = 0
+access("/etc/ld.so.nohwcap", F_OK)      = -1 ENOENT (No such file or directory)
+openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libnsl.so.1", O_RDONLY|O_CLOEXEC) = 4
+read(4, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\220@\0\0\0\0\0\0"..., 832) = 832
+fstat(4, {st_mode=S_IFREG|0644, st_size=97176, ...}) = 0
+mmap(NULL, 2202200, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 4, 0) = 0x7f2c61943000
+mprotect(0x7f2c6195a000, 2093056, PROT_NONE) = 0
+mmap(0x7f2c61b59000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 4, 0x16000) = 0x7f2c61b59000
+mmap(0x7f2c61b5b000, 6744, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7f2c61b5b000
+close(4)                                = 0
+access("/etc/ld.so.nohwcap", F_OK)      = -1 ENOENT (No such file or directory)
+openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libnss_files.so.2", O_RDONLY|O_CLOEXEC) = 4
+read(4, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0P#\0\0\0\0\0\0"..., 832) = 832
+fstat(4, {st_mode=S_IFREG|0644, st_size=47568, ...}) = 0
+mmap(NULL, 2168632, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 4, 0) = 0x7f2c61731000
+mprotect(0x7f2c6173c000, 2093056, PROT_NONE) = 0
+mmap(0x7f2c6193b000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 4, 0xa000) = 0x7f2c6193b000
+mmap(0x7f2c6193d000, 22328, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7f2c6193d000
+close(4)                                = 0
+mprotect(0x7f2c6193b000, 4096, PROT_READ) = 0
+mprotect(0x7f2c61b59000, 4096, PROT_READ) = 0
+mprotect(0x7f2c61d67000, 4096, PROT_READ) = 0
+munmap(0x7f2c62f56000, 83927)           = 0
+openat(AT_FDCWD, "/etc/passwd", O_RDONLY|O_CLOEXEC) = 4
+lseek(4, 0, SEEK_CUR)                   = 0
+fstat(4, {st_mode=S_IFREG|0644, st_size=2705, ...}) = 0
+mmap(NULL, 2705, PROT_READ, MAP_SHARED, 4, 0) = 0x7f2c62f6a000
+lseek(4, 2705, SEEK_SET)                = 2705
+munmap(0x7f2c62f6a000, 2705)            = 0
+close(4)                                = 0
+openat(AT_FDCWD, "/home/rohit/.sqliterc", O_RDONLY) = -1 ENOENT (No such file or directory)
+fstat(1, {st_mode=S_IFCHR|0620, st_rdev=makedev(136, 5), ...}) = 0
+write(1, "SQLite version 3.46.0 2024-02-17"..., 73) = 73
+write(1, "sqlite> ", 8)                 = 8
+fstat(0, {st_mode=S_IFCHR|0620, st_rdev=makedev(136, 5), ...}) = 0
+read(0, "select * from product;\n", 1024) = 23
+fcntl(3, F_SETLK, {l_type=F_RDLCK, l_whence=SEEK_SET, l_start=1073741824, l_len=1}) = 0
+fcntl(3, F_SETLK, {l_type=F_RDLCK, l_whence=SEEK_SET, l_start=1073741826, l_len=510}) = 0
+fcntl(3, F_SETLK, {l_type=F_UNLCK, l_whence=SEEK_SET, l_start=1073741824, l_len=1}) = 0
+stat("/oldhome/rohit/ssdBtrfs/sqlite/Btrfs_sqlite/build/product.db-journal", 0x7ffd09fbfe00) = -1 ENOENT (No such file or directory)
+stat("/oldhome/rohit/ssdBtrfs/sqlite/Btrfs_sqlite/build/product.db-wal", 0x7ffd09fbfe00) = -1 ENOENT (No such file or directory)
+fstat(3, {st_mode=S_IFREG|0644, st_size=8192, ...}) = 0
+brk(0x557a6807d000)                     = 0x557a6807d000
+pread64(3, "SQLite format 3\0\20\0\1\1\0@  \0\0\0\5\0\0\0\2"..., 4096, 0) = 4096
+fcntl(3, F_SETLK, {l_type=F_UNLCK, l_whence=SEEK_SET, l_start=0, l_len=0}) = 0
+fcntl(3, F_SETLK, {l_type=F_RDLCK, l_whence=SEEK_SET, l_start=1073741824, l_len=1}) = 0
+fcntl(3, F_SETLK, {l_type=F_RDLCK, l_whence=SEEK_SET, l_start=1073741826, l_len=510}) = 0
+fcntl(3, F_SETLK, {l_type=F_UNLCK, l_whence=SEEK_SET, l_start=1073741824, l_len=1}) = 0
+stat("/oldhome/rohit/ssdBtrfs/sqlite/Btrfs_sqlite/build/product.db-journal", 0x7ffd09fc0c80) = -1 ENOENT (No such file or directory)
+pread64(3, "\0\0\0\5\0\0\0\2\0\0\0\0\0\0\0\0", 16, 24) = 16
+stat("/oldhome/rohit/ssdBtrfs/sqlite/Btrfs_sqlite/build/product.db-wal", 0x7ffd09fc0c80) = -1 ENOENT (No such file or directory)
+fstat(3, {st_mode=S_IFREG|0644, st_size=8192, ...}) = 0
+pread64(3, "\r\0\0\0\v\17:\0\17\356\17\334\17\312\17\270\17\246\17\224\17\202\17p\17^\17L\17:\0\0"..., 4096, 4096) = 4096
+write(1, "1|Pancakes|75|OK\n", 17)      = 17
+write(1, "1|Pancakes|75|OK\n", 17)      = 17
+write(1, "1|Pancakes|75|OK\n", 17)      = 17
+write(1, "1|Pancakes|75|OK\n", 17)      = 17
+write(1, "1|Pancakes|75|OK\n", 17)      = 17
+write(1, "1|Pancakes|75|OK\n", 17)      = 17
+write(1, "1|Pancakes|75|OK\n", 17)      = 17
+write(1, "1|Pancakes|75|OK\n", 17)      = 17
+write(1, "1|Pancakes|75|OK\n", 17)      = 17
+write(1, "1|Pancakes|75|OK\n", 17)      = 17
+write(1, "1|Pancakes|75|OK\n", 17)      = 17
+fcntl(3, F_SETLK, {l_type=F_UNLCK, l_whence=SEEK_SET, l_start=0, l_len=0}) = 0
+write(1, "sqlite> ", 8)                 = 8
+read(0, "BEGIN TRANSACTION;\n", 1024)   = 19
+write(1, "sqlite> ", 8)                 = 8
+read(0, "INSERT INTO product(prod_id, pro"..., 1024) = 93
+fcntl(3, F_SETLK, {l_type=F_RDLCK, l_whence=SEEK_SET, l_start=1073741824, l_len=1}) = 0
+fcntl(3, F_SETLK, {l_type=F_RDLCK, l_whence=SEEK_SET, l_start=1073741826, l_len=510}) = 0
+fcntl(3, F_SETLK, {l_type=F_UNLCK, l_whence=SEEK_SET, l_start=1073741824, l_len=1}) = 0
+stat("/oldhome/rohit/ssdBtrfs/sqlite/Btrfs_sqlite/build/product.db-journal", 0x7ffd09fc0c80) = -1 ENOENT (No such file or directory)
+pread64(3, "\0\0\0\5\0\0\0\2\0\0\0\0\0\0\0\0", 16, 24) = 16
+stat("/oldhome/rohit/ssdBtrfs/sqlite/Btrfs_sqlite/build/product.db-wal", 0x7ffd09fc0c80) = -1 ENOENT (No such file or directory)
+fstat(3, {st_mode=S_IFREG|0644, st_size=8192, ...}) = 0
+fcntl(3, F_SETLK, {l_type=F_WRLCK, l_whence=SEEK_SET, l_start=1073741825, l_len=1}) = 0
+stat("/oldhome/rohit/ssdBtrfs/sqlite/Btrfs_sqlite/build/product.db", {st_mode=S_IFREG|0644, st_size=8192, ...}) = 0
+openat(AT_FDCWD, "/oldhome/rohit/ssdBtrfs/sqlite/Btrfs_sqlite/build/product.db", O_RDONLY) = 4
+openat(AT_FDCWD, "/oldhome/rohit/ssdBtrfs/sqlite/Btrfs_sqlite/build/product.db_child", O_WRONLY|O_CREAT|O_EXCL, 0664) = 5
+ioctl(5, BTRFS_IOC_CLONE or FICLONE, 4) = 0
+close(4)                                = 0
+close(5)                                = 0
+mmap(NULL, 266240, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f2c62f11000
+write(1, "sqlite> ", 8)                 = 8
+read(0, "INSERT INTO product(prod_id, pro"..., 1024) = 93
+write(1, "sqlite> ", 8)                 = 8
+read(0, "INSERT INTO product(prod_id, pro"..., 1024) = 93
+write(1, "sqlite> ", 8)                 = 8
+read(0, "INSERT INTO product(prod_id, pro"..., 1024) = 93
+write(1, "sqlite> ", 8)                 = 8
+read(0, "COMMIT;\n", 1024)              = 8
+fcntl(3, F_SETLK, {l_type=F_WRLCK, l_whence=SEEK_SET, l_start=1073741824, l_len=1}) = 0
+fcntl(3, F_SETLK, {l_type=F_WRLCK, l_whence=SEEK_SET, l_start=1073741826, l_len=510}) = 0
+openat(AT_FDCWD, "/oldhome/rohit/ssdBtrfs/sqlite/Btrfs_sqlite/build/product.db_child", O_RDONLY) = 4
+fdatasync(4)                            = 0
+close(4)                                = 0
+pwrite64(3, "SQLite format 3\0\20\0\1\1\0@  \0\0\0\6\0\0\0\2"..., 4096, 0) = 4096
+pwrite64(3, "\r\0\0\0\17\16\362\0\17\356\17\334\17\312\17\270\17\246\17\224\17\202\17p\17^\17L\17:\17("..., 4096, 4096) = 4096
+fdatasync(3)                            = 0
+munmap(0x7f2c62f11000, 266240)          = 0
+unlink("/oldhome/rohit/ssdBtrfs/sqlite/Btrfs_sqlite/build/product.db_child") = 0
+fcntl(3, F_SETLK, {l_type=F_RDLCK, l_whence=SEEK_SET, l_start=1073741826, l_len=510}) = 0
+fcntl(3, F_SETLK, {l_type=F_UNLCK, l_whence=SEEK_SET, l_start=1073741824, l_len=2}) = 0
+fcntl(3, F_SETLK, {l_type=F_UNLCK, l_whence=SEEK_SET, l_start=0, l_len=0}) = 0
+write(1, "sqlite> ", 8)                 = 8
+read(0, "", 1024)                       = 0
+nanosleep({tv_sec=0, tv_nsec=50000000}, NULL) = 0
+write(1, "\n", 1)                       = 1
+stat("/oldhome/rohit/ssdBtrfs/sqlite/Btrfs_sqlite/build/product.db", {st_mode=S_IFREG|0644, st_size=8192, ...}) = 0
+fstat(3, {st_mode=S_IFREG|0644, st_size=8192, ...}) = 0
+stat("/oldhome/rohit/ssdBtrfs/sqlite/Btrfs_sqlite/build/product.db", {st_mode=S_IFREG|0644, st_size=8192, ...}) = 0
+close(3)                                = 0
+exit_group(0)                           = ?
++++ exited with 0 +++

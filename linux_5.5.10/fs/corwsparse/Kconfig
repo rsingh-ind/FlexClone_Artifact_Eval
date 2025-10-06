@@ -1,0 +1,2 @@
+config CoRW_SPARSE 
+	tristate "corw sparse file layer"

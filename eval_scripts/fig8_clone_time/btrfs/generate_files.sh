@@ -1,0 +1,1 @@
+../common_files/generate_files.sh

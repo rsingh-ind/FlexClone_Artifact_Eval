@@ -1,0 +1,25 @@
+#!/bin/bash
+
+
+fs=("btrfs" "xfs" "ext4" "flexclone")
+#op=("seqWrite" "randWrite")
+op=("randWrite")
+
+for i in ${op[@]}
+do
+        for j in ${fs[@]}
+        do
+                ./process_mem_util_helper.sh memUtil_fioOut_16GB_${i}_coldCache_4096bs_32thread_asynchOff_${j}_ssd memUtil_fioOut_16GB_${i}_coldCache_4096bs_32thread_asynchOff_${j}_ssd_processed
+        done
+done
+
+: '
+./process_mem_util_helper.sh memUtil_fioOut_16GB_randWrite_coldCache_4096bs_Btrfs_32thread_asynchOff_ssd memUtil_fioOut_16GB_randWrite_coldCache_4096bs_Btrfs_32thread_asynchOff_ssd_processed
+./process_mem_util_helper.sh memUtil_fioOut_16GB_randWrite_coldCache_4096bs_Ext4_32thread_asynchOff_ssd memUtil_fioOut_16GB_randWrite_coldCache_4096bs_Ext4_32thread_asynchOff_ssd_processed
+./process_mem_util_helper.sh memUtil_fioOut_16GB_randWrite_coldCache_4096bs_ourExt4_32thread_asynchOff_ssd memUtil_fioOut_16GB_randWrite_coldCache_4096bs_ourExt4_32thread_asynchOff_ssd_processed
+./process_mem_util_helper.sh memUtil_fioOut_16GB_randWrite_coldCache_4096bs_XFS_32thread_asynchOff_ssd memUtil_fioOut_16GB_randWrite_coldCache_4096bs_XFS_32thread_asynchOff_ssd_processed
+./process_mem_util_helper.sh memUtil_fioOut_16GB_seqWrite_coldCache_4096bs_Btrfs_32thread_asynchOff_ssd memUtil_fioOut_16GB_seqWrite_coldCache_4096bs_Btrfs_32thread_asynchOff_ssd_processed
+./process_mem_util_helper.sh memUtil_fioOut_16GB_seqWrite_coldCache_4096bs_Ext4_32thread_asynchOff_ssd memUtil_fioOut_16GB_seqWrite_coldCache_4096bs_Ext4_32thread_asynchOff_ssd_processed
+./process_mem_util_helper.sh memUtil_fioOut_16GB_seqWrite_coldCache_4096bs_ourExt4_32thread_asynchOff_ssd memUtil_fioOut_16GB_seqWrite_coldCache_4096bs_ourExt4_32thread_asynchOff_ssd_processed
+./process_mem_util_helper.sh memUtil_fioOut_16GB_seqWrite_coldCache_4096bs_XFS_32thread_asynchOff_ssd memUtil_fioOut_16GB_seqWrite_coldCache_4096bs_XFS_32thread_asynchOff_ssd_processed
+'

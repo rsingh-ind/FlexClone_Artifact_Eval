@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.oltpbenchmark.benchmarks.seats.TestSEATSBenchmark
+-------------------------------------------------------------------------------
+Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.688 sec

@@ -1,0 +1,10 @@
+[randWrite]
+rw=randwrite
+size=16g
+ioengine=sync
+invalidate=0
+allow_file_create=0
+thread
+numjobs=1
+bs=4096
+filename=16GB_child

@@ -1,0 +1,10 @@
+orig: Contains sqlite library for Ext4 (untouched sqlite)
+
+modified: Contains sqlite library modified for ourExt4
+
+btrfs_xfs: Contains sqlite library modified for both Btrfs and XFS
+
+
+Note:
+	We are using sqlite version 3.46. However, name of the jar file used in benchbase is sqlite-jdbc-3.42.0.0.jar.
+	Don't worry about name.

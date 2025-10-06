@@ -1,0 +1,88 @@
+============================
+Steps to prepare setup:
+============================
+
+Phase 1:
+========
+* Create VM with 32GB space
+* Seprate 4GB partition for /boot during kernel installation
+* Sepratae 12GB partition for /lib/modules. Create this parition during kernel installation. 
+	Use it later as mount point for /lib/modules by modifying fstab.
+* Make /boot/grub/grubenv in base image as immutable.
+	$ sudo chattr +i /boot/grub/grubenv
+* Add kernel installation dependencies in base VM
+* Add 5.5.10 kernel src code in a separate disk attached to VM
+	Commands to attach this disk to VM
+	$ sudo virsh attach-disk seethrough /oldhome/rohit/FlexSnap_VM_disks/seethrough/32GB_disk vdb --cache none
+	$ sudo virsh detach-disk prob2 vdb
+* Compile kernel in this separate disk. Use config file of ubuntu 18
+	present in /boot as the .config file.
+	Remove modules from .config (remove unnecessary drivers using make menuconfig), so that, size of total modules created is around 950MB.
+	
+* Install sshd
+* Write script that automatically installs kernel modules and installs kernel
+
+Phase 2:
+========
+* Note down sectors of /boot partition and /lib/modules partition.
+
+	Device     Boot    Start      End  Sectors  Size Id Type
+	/dev/vda1  *        2048  7999487  7997440  3.8G 83 Linux	<--------- /boot (4GB)
+	/dev/vda2        8001534 67106815 59105282 28.2G  5 Extended
+	/dev/vda5        8001536 31999999 23998464 11.5G 83 Linux	<--------- /lib/modules (12GB)
+	/dev/vda6       32002048 67106815 35104768 16.8G 83 Linux
+
+
+	1 sector size:                  512 bytes
+	2048 sector is at offset:       2048 * 512 bytes = 1048576 bytes = 256 4KB block
+	Total 7997440 sectors:          7997440 * 512 bytes = 4094689280 bytes = 999680 4KB blocks
+
+	i.e. Range of /boot's 4KB blocks is from  256 to 999935
+
+	Similarly, 8001536 sector:	1000192 4KB block
+	Total 23998464 sectors:		2999808 4KB blocks
+
+	i.e. 1000192 to 3999999 (start block number, end block number)
+
+
+* Verify range is correct by loop mount.
+	1) sudo losetup --find --show --offset 1048576 --sizelimit 4094689280 seethrough.raw
+	   //Creates loopback device. Prints name of loopback device in output.
+	   //offset and size are in bytes
+
+	2) sudo mount /dev/loop15 -t ext4 /mnt
+	   //Assuming, loopback device is loop15
+
+
+Phase 3:
+========
+
+* Create 4 children normally for Btrfs, XFS and with seethrough config in case of flexsnap
+	Superblock and first GDT of both partitions shouldn't be marked as seethrough
+	$ ./setxattr_generic -c seethrough.copy1 -p seethrough.raw -f seethrough.frnd1 -r 258:999680:3,1000194:2999808:3 
+
+	$ ./setxattr_generic -c seethrough.copy1 -p seethrough.raw -f seethrough.frnd1 -r 258:999935:3,1000194:3999999:3 
+* Attach disk containing compiled linux into all VMs. remote.sh is modified to do so.
+  Inside each VM, mount partition of this disk with following command:
+	$ sudo mount -o ro,noload /dev/vda1 ~/Downloads/linux
+		ro = read-only
+		noload = prevents journal replay (which is write operation)
+* 4GB RAM, 8 cores, cache=writeback for each VM
+* Login into VM's and open terminal in each VM
+* Don't run base in while running experiment for Btrfs and XFS
+* Drop caches
+* Run sar to capture memory util on host 
+* Run sar to capture cpu util on host 
+* Trigger modules and kernel installation script
+* Time above operation.
+
+
+Note:
+=====
+
+* We already have created a VM with required configuration
+* User: seethrough
+  Pass: 1
+
+* To fix "X11 connection rejected because of wrong authentication."
+	$ export XAUTHORITY=$HOME/.Xauthority

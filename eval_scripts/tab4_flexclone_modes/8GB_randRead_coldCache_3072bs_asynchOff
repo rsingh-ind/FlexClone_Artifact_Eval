@@ -1,0 +1,13 @@
+[global]
+size=8g
+ioengine=sync
+invalidate=0
+allow_file_create=0
+bs=3072
+thread
+numjobs=1
+cpus_allowed=0
+
+[job1]
+rw=randread
+filename=8g_child1

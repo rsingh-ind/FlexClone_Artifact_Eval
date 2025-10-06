@@ -1,0 +1,10 @@
+[seqRead]
+rw=read
+size=8g
+ioengine=sync
+invalidate=0
+allow_file_create=0
+thread
+numjobs=32
+bs=3072
+filename=8GB_child

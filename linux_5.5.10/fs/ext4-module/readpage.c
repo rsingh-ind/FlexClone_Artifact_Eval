@@ -1,0 +1,592 @@
+// SPDX-License-Identifier: GPL-2.0
+/*
+ * linux/fs/ext4/readpage.c
+ *
+ * Copyright (C) 2002, Linus Torvalds.
+ * Copyright (C) 2015, Google, Inc.
+ *
+ * This was originally taken from fs/mpage.c
+ *
+ * The intent is the ext4_mpage_readpages() function here is intended
+ * to replace mpage_readpages() in the general case, not just for
+ * encrypted files.  It has some limitations (see below), where it
+ * will fall back to read_block_full_page(), but these limitations
+ * should only be hit when page_size != block_size.
+ *
+ * This will allow us to attach a callback function to support ext4
+ * encryption.
+ *
+ * If anything unusual happens, such as:
+ *
+ * - encountering a page which has buffers
+ * - encountering a page which has a non-hole after a hole
+ * - encountering a page with non-contiguous blocks
+ *
+ * then this code just gives up and calls the buffer_head-based read function.
+ * It does handle a page which has holes at the end - that is a common case:
+ * the end-of-file on blocksize < PAGE_SIZE setups.
+ *
+ */
+
+#include <linux/kernel.h>
+#include <linux/export.h>
+#include <linux/mm.h>
+#include <linux/kdev_t.h>
+#include <linux/gfp.h>
+#include <linux/bio.h>
+#include <linux/fs.h>
+#include <linux/buffer_head.h>
+#include <linux/blkdev.h>
+#include <linux/highmem.h>
+#include <linux/prefetch.h>
+#include <linux/mpage.h>
+#include <linux/writeback.h>
+#include <linux/backing-dev.h>
+#include <linux/pagevec.h>
+#include <linux/cleancache.h>
+
+#include "ext4.h"
+
+#define NUM_PREALLOC_POST_READ_CTXS	128
+
+static struct kmem_cache *bio_post_read_ctx_cache;
+static mempool_t *bio_post_read_ctx_pool;
+
+/* postprocessing steps for read bios */
+enum bio_post_read_step {
+	STEP_INITIAL = 0,
+	STEP_DECRYPT,
+	STEP_VERITY,
+	STEP_MAX,
+};
+
+struct bio_post_read_ctx {
+	struct bio *bio;
+	struct work_struct work;
+	unsigned int cur_step;
+	unsigned int enabled_steps;
+};
+
+static void __read_end_io(struct bio *bio)
+{
+	struct page *page;
+	struct bio_vec *bv;
+	struct bvec_iter_all iter_all;
+
+	//printk("Inside __read_end_io\n");
+
+	bio_for_each_segment_all(bv, bio, iter_all) {
+		page = bv->bv_page;
+
+		/* PG_error was set if any post_read step failed */
+		if (bio->bi_status || PageError(page)) {
+			ClearPageUptodate(page);
+			/* will re-read again later */
+			ClearPageError(page);
+		} else {
+			SetPageUptodate(page);
+		}
+		unlock_page(page);
+	}
+	if (bio->bi_private)
+		mempool_free(bio->bi_private, bio_post_read_ctx_pool);
+	bio_put(bio);
+}
+
+static void bio_post_read_processing(struct bio_post_read_ctx *ctx);
+
+static void decrypt_work(struct work_struct *work)
+{
+	//printk("Inside decrypt_work\n");
+
+	struct bio_post_read_ctx *ctx =
+		container_of(work, struct bio_post_read_ctx, work);
+
+	fscrypt_decrypt_bio(ctx->bio);
+
+	bio_post_read_processing(ctx);
+}
+
+static void verity_work(struct work_struct *work)
+{
+	struct bio_post_read_ctx *ctx =
+		container_of(work, struct bio_post_read_ctx, work);
+	struct bio *bio = ctx->bio;
+
+
+	//printk("Inside verity_work\n");
+
+	/*
+	 * fsverity_verify_bio() may call readpages() again, and although verity
+	 * will be disabled for that, decryption may still be needed, causing
+	 * another bio_post_read_ctx to be allocated.  So to guarantee that
+	 * mempool_alloc() never deadlocks we must free the current ctx first.
+	 * This is safe because verity is the last post-read step.
+	 */
+	BUILD_BUG_ON(STEP_VERITY + 1 != STEP_MAX);
+	mempool_free(ctx, bio_post_read_ctx_pool);
+	bio->bi_private = NULL;
+
+	fsverity_verify_bio(bio);
+
+	__read_end_io(bio);
+}
+
+static void bio_post_read_processing(struct bio_post_read_ctx *ctx)
+{
+
+	//printk("Inside bio_post_read_processing\n");
+
+	/*
+	 * We use different work queues for decryption and for verity because
+	 * verity may require reading metadata pages that need decryption, and
+	 * we shouldn't recurse to the same workqueue.
+	 */
+	switch (++ctx->cur_step) {
+	case STEP_DECRYPT:
+		if (ctx->enabled_steps & (1 << STEP_DECRYPT)) {
+			INIT_WORK(&ctx->work, decrypt_work);
+			fscrypt_enqueue_decrypt_work(&ctx->work);
+			return;
+		}
+		ctx->cur_step++;
+		/* fall-through */
+	case STEP_VERITY:
+		if (ctx->enabled_steps & (1 << STEP_VERITY)) {
+			INIT_WORK(&ctx->work, verity_work);
+			fsverity_enqueue_verify_work(&ctx->work);
+			return;
+		}
+		ctx->cur_step++;
+		/* fall-through */
+	default:
+		__read_end_io(ctx->bio);
+	}
+}
+
+static bool bio_post_read_required(struct bio *bio)
+{
+	//printk("Inside bio_post_read_required\n");
+	return bio->bi_private && !bio->bi_status;
+}
+
+/*
+ * I/O completion handler for multipage BIOs.
+ *
+ * The mpage code never puts partial pages into a BIO (except for end-of-file).
+ * If a page does not map to a contiguous run of blocks then it simply falls
+ * back to block_read_full_page().
+ *
+ * Why is this?  If a page's completion depends on a number of different BIOs
+ * which can complete in any order (or at the same time) then determining the
+ * status of that page is hard.  See end_buffer_async_read() for the details.
+ * There is no point in duplicating all that complexity.
+ */
+static void mpage_end_io(struct bio *bio)
+{
+
+	//printk("Inside mpage_end_io\n");
+
+	if (bio_post_read_required(bio)) {
+		struct bio_post_read_ctx *ctx = bio->bi_private;
+
+		ctx->cur_step = STEP_INITIAL;
+		bio_post_read_processing(ctx);
+		return;
+	}
+	__read_end_io(bio);
+}
+
+static inline bool ext4_need_verity(const struct inode *inode, pgoff_t idx)
+{
+	//printk("Inside ext4_need_verity\n");
+
+	return fsverity_active(inode) &&
+	       idx < DIV_ROUND_UP(inode->i_size, PAGE_SIZE);
+}
+
+static struct bio_post_read_ctx *get_bio_post_read_ctx(struct inode *inode,
+						       struct bio *bio,
+						       pgoff_t first_idx)
+{
+	unsigned int post_read_steps = 0;
+	struct bio_post_read_ctx *ctx = NULL;
+
+	//printk("Inside get_bio_post_read_ctx\n");
+
+	if (IS_ENCRYPTED(inode) && S_ISREG(inode->i_mode))
+		post_read_steps |= 1 << STEP_DECRYPT;
+
+	if (ext4_need_verity(inode, first_idx))
+		post_read_steps |= 1 << STEP_VERITY;
+
+	if (post_read_steps) {
+		ctx = mempool_alloc(bio_post_read_ctx_pool, GFP_NOFS);
+		if (!ctx)
+			return ERR_PTR(-ENOMEM);
+		ctx->bio = bio;
+		ctx->enabled_steps = post_read_steps;
+		bio->bi_private = ctx;
+	}
+	return ctx;
+}
+
+static inline loff_t ext4_readpage_limit(struct inode *inode)
+{
+	//printk("Inside ext4_readpage_limit\n");
+
+	if (IS_ENABLED(CONFIG_FS_VERITY) &&
+	    (IS_VERITY(inode) || ext4_verity_in_progress(inode)))
+		return inode->i_sb->s_maxbytes;
+
+	return i_size_read(inode);
+}
+
+int ext4_mpage_readpages(struct address_space *mapping,
+			 struct list_head *pages, struct page *page,
+			 unsigned nr_pages, bool is_readahead)
+{
+	struct bio *bio = NULL;
+	sector_t last_block_in_bio = 0;
+
+
+	//printk("Inside ext4_mpage_readpages\n");
+	//printk("ext4_mpage_readpages: pages: %x\n", pages);
+	//printk("ext4_mpage_readpages: page: %x\n", page);
+	//printk("ext4_mpage_readpages: nr_pages: %u\n", nr_pages);
+	//printk("ext4_mpage_readpages: is_readahead: %u\n", is_readahead);
+
+	struct inode *inode = mapping->host;
+	const unsigned blkbits = inode->i_blkbits;
+	const unsigned blocks_per_page = PAGE_SIZE >> blkbits;
+	const unsigned blocksize = 1 << blkbits;
+	sector_t block_in_file;
+	sector_t last_block;
+	sector_t last_block_in_file;
+	sector_t blocks[MAX_BUF_PER_PAGE];
+	unsigned page_block;
+	struct block_device *bdev = inode->i_sb->s_bdev;
+	int length;
+	unsigned relative_block = 0;
+	struct ext4_map_blocks map;
+
+	//printk("ext4_mpage_readpages: inode->i_ino: %lu\n", inode->i_ino);
+	//printk("ext4_mpage_readpages: blkbits: %u\n", blkbits);
+	//printk("ext4_mpage_readpages: blocks_per_page: %u\n", blocks_per_page);
+	//printk("ext4_mpage_readpages: blocksize: %u\n", blocksize);
+
+	//Is this extent?
+	map.m_pblk = 0;
+	map.m_lblk = 0;
+	map.m_len = 0;
+	map.m_flags = 0;
+
+	//for each page
+	for (; nr_pages; nr_pages--) {
+		int fully_mapped = 1;
+
+		//If one block per page, first hole is equal to 1.
+		//If four block per page, first hole is equal to 4.
+		unsigned first_hole = blocks_per_page;
+
+		//printk("ext4_mpage_readpages: Initialised first_hole: %d, blocks_per_page: %d\n", first_hole, blocks_per_page);
+		//pages are already allocated.
+		
+		//printk("ext4_mpage_readpages: pages: %x\n", pages);
+		if (pages) {
+			//get one page from pages list
+			page = lru_to_page(pages);
+			//printk("ext4_mpage_readpages: Getting page from pages list\n");
+
+			prefetchw(&page->flags);
+
+			//delete the page from pages list
+			list_del(&page->lru);
+			//printk("ext4_mpage_readpages: Removing page from pages list\n");
+
+			//add page to page cache
+			//what is this page cache?
+			if (add_to_page_cache_lru(page, mapping, page->index,
+				  readahead_gfp_mask(mapping)))
+				goto next_page;
+		}
+
+		//so, page shouldn't have buffers?!
+		if (page_has_buffers(page))
+			goto confused;
+
+
+		//last blocks tells last block upto which readahead has to 
+		//happen
+		//
+		//block in file tells block from which readahead has to start
+		//and then onwards logical block of file being processed
+		//
+		block_in_file = (sector_t)page->index << (PAGE_SHIFT - blkbits);
+		last_block = block_in_file + nr_pages * blocks_per_page;
+
+		//ext4_readpage_limit gives inode size
+		//last block in file (literal meaning)
+		//Eg: If 8KB file then last block is block 2 or 3
+		//Looks like it will be 3. 
+		//Eg: one file 45056, 
+		//45056/4096 = 11. 
+		//Printed value of last_block_in_file is also 11
+		//
+		last_block_in_file = (ext4_readpage_limit(inode) +
+				      blocksize - 1) >> blkbits;
+
+		//maybe, referring to reading outside file range
+		if (last_block > last_block_in_file)
+			last_block = last_block_in_file;
+		page_block = 0;
+
+		//printk("ext4_mpage_readpages: last_block: %llu, block_in_file: %llu, last_block_in_file: %llu\n", last_block, block_in_file, last_block_in_file);
+                //printk("ext4_mpage_readpages: map.m_flags & EXT4_MAP_MAPPED: %u\n",map.m_flags & EXT4_MAP_MAPPED );
+                //printk("ext4_mpage_readpages: map.m_lblk: %u, map.m_len: %u\n", map.m_lblk, map.m_len);
+
+		/*
+		 * Map blocks using the previous result first.
+		 */
+		if ((map.m_flags & EXT4_MAP_MAPPED) &&
+		    block_in_file > map.m_lblk &&
+		    block_in_file < (map.m_lblk + map.m_len)) {
+			unsigned map_offset = block_in_file - map.m_lblk;
+			unsigned last = map.m_len - map_offset;
+
+			for (relative_block = 0; ; relative_block++) {
+				if (relative_block == last) {
+					/* needed? */
+					map.m_flags &= ~EXT4_MAP_MAPPED;
+					break;
+				}
+				if (page_block == blocks_per_page)
+					break;
+				blocks[page_block] = map.m_pblk + map_offset +
+					relative_block;
+				page_block++;
+				block_in_file++;
+			}
+		}
+
+		/*
+		 * Then do more ext4_map_blocks() calls until we are
+		 * done with this page.
+		 */
+		//printk("ext4_mpage_readpages: page_block: %llu, blocks_per_page: %llu\n", page_block, blocks_per_page);
+
+		//If block is made up of n blocks, then 
+		//for each block
+		while (page_block < blocks_per_page) {
+			
+			//last blocks tells last block upto which readahead has to 
+			//happen
+			//
+			//block in file tells block from which readahead has to start
+			//
+
+			if (block_in_file < last_block) {
+				//printk("ext4_mpage_readpages: block_in_file: %llu, last_block: %llu\n", block_in_file, last_block);
+
+				//prepare map values. These will be passed to 
+				//ext4_map_blocks
+
+				map.m_lblk = block_in_file;
+				map.m_len = last_block - block_in_file;
+
+				//printk("ext4_mpage_readpages: map.m_lblk: %llu, map.m_len: %llu\n", map.m_lblk, map.m_len);
+
+
+				//if returns < 0, error page
+				//Looks like map.flags value is filled by ext4_map_blocks.
+				//It sets EXT4_MAP_MAPPED flag in case data is present in
+				//disk else it is unset in case of hole 
+				//
+				//Also, looks like only map.m_lblk is found i.e. map.m_len
+				//is not used.
+				if (ext4_map_blocks(NULL, inode, &map, 0) < 0) {
+				set_error_page:
+					SetPageError(page);
+					zero_user_segment(page, 0,
+							  PAGE_SIZE);
+					unlock_page(page);
+					goto next_page;
+				}
+			}
+			//does this tell whether page is mapped from extent tree to
+			//extent status tree?
+			//check EXT4_MAP_MAPPED Flag is unset
+			//
+			if ((map.m_flags & EXT4_MAP_MAPPED) == 0) {
+				//printk("ext4_mpage_readpages: map.m_flags & EXT4_MAP_MAPPED: %u\n",map.m_flags & EXT4_MAP_MAPPED );
+
+				//looks like this flag tells that 
+				//for a page made up of n blocks,
+				//all n blocks are mapped to/from disk or not.
+
+				fully_mapped = 0;
+
+				//first hole is 1 and blocks per page is also 1;
+				//page block is 0
+				//blocks per page is 1 because page contains
+				//only 1 block i.e. block 0
+				//Imagine, page has 4 blocks, and all 4 are holes.
+				//Then also, first hole will point to block 0 only.
+				//Because once its initialised, after that it is not
+				//equal to blocks_per_page. Thus, it is not set again.
+				//That's why this field is named so
+				//
+				if (first_hole == blocks_per_page)
+					first_hole = page_block;
+				page_block++;
+				block_in_file++;
+
+				//printk("ext4_mpage_readpages: first_hole: %llu, page_block: %llu, block_in_file: %llu\n", first_hole, page_block, block_in_file);
+				continue;
+			}
+			if (first_hole != blocks_per_page)
+				goto confused;		/* hole -> non-hole */
+
+			/* Contiguous blocks? */
+			if (page_block && blocks[page_block-1] != map.m_pblk-1)
+				goto confused;
+			for (relative_block = 0; ; relative_block++) {
+				if (relative_block == map.m_len) {
+					/* needed? */
+					map.m_flags &= ~EXT4_MAP_MAPPED;
+					break;
+				} else if (page_block == blocks_per_page)
+					break;
+				blocks[page_block] = map.m_pblk+relative_block;
+				page_block++;
+				block_in_file++;
+			}
+		}
+		//printk("ext4_mpage_readpages: first_hole: %d, blocks_per_page: %d\n", first_hole, blocks_per_page);
+
+		//What is this first hole?
+		//Update: figured out above.
+
+		//hole is contained in atleast one of the blocks of the page
+		if (first_hole != blocks_per_page) {
+			//printk("ext4_mpage_readpages: first_hole: %d, blocks_per_page: %d. calling zero_user_segment.\n", first_hole, blocks_per_page);
+			zero_user_segment(page, first_hole << blkbits,
+					  PAGE_SIZE);
+
+			//I think, this code snippet assumes that page is made up 
+			//of one block only. That's why there is goto next_page
+			//
+			if (first_hole == 0) {
+				if (ext4_need_verity(inode, page->index) &&
+				    !fsverity_verify_page(page))
+					goto set_error_page;
+				SetPageUptodate(page);
+				unlock_page(page);
+				goto next_page;
+			}
+		} else if (fully_mapped) {
+		
+			//printk("ext4_mpage_readpages: fully_mapped: %u. Calling SetPageMappedToDisk()\n", fully_mapped);
+			SetPageMappedToDisk(page);
+		}
+		if (fully_mapped && blocks_per_page == 1 &&
+		    !PageUptodate(page) && cleancache_get_page(page) == 0) {
+			SetPageUptodate(page);
+			goto confused;
+		}
+
+		/*
+		 * This page will go to BIO.  Do we need to send this
+		 * BIO off first?
+		 */
+		if (bio && (last_block_in_bio != blocks[0] - 1)) {
+		submit_and_realloc:
+			//printk("ext4_mpage_readpages: calling submit_bio()\n");
+			submit_bio(bio);
+			bio = NULL;
+		}
+		if (bio == NULL) {
+			struct bio_post_read_ctx *ctx;
+
+			/*
+			 * bio_alloc will _always_ be able to allocate a bio if
+			 * __GFP_DIRECT_RECLAIM is set, see bio_alloc_bioset().
+			 */
+			bio = bio_alloc(GFP_KERNEL,
+				min_t(int, nr_pages, BIO_MAX_PAGES));
+			ctx = get_bio_post_read_ctx(inode, bio, page->index);
+			if (IS_ERR(ctx)) {
+				bio_put(bio);
+				bio = NULL;
+				goto set_error_page;
+			}
+			bio_set_dev(bio, bdev);
+			bio->bi_iter.bi_sector = blocks[0] << (blkbits - 9);
+			bio->bi_end_io = mpage_end_io;
+			bio->bi_private = ctx;
+			bio_set_op_attrs(bio, REQ_OP_READ,
+						is_readahead ? REQ_RAHEAD : 0);
+		}
+
+		length = first_hole << blkbits;
+		if (bio_add_page(bio, page, length, 0) < length)
+			goto submit_and_realloc;
+
+		if (((map.m_flags & EXT4_MAP_BOUNDARY) &&
+		     (relative_block == map.m_len)) ||
+		    (first_hole != blocks_per_page)) {
+			submit_bio(bio);
+			bio = NULL;
+		} else
+			last_block_in_bio = blocks[blocks_per_page - 1];
+		goto next_page;
+	confused:
+		if (bio) {
+			submit_bio(bio);
+			bio = NULL;
+		}
+		if (!PageUptodate(page))
+			block_read_full_page(page, ext4_get_block);
+		else
+			unlock_page(page);
+	next_page:
+		//printk("ext4_mpage_readpages: goto next_page");
+		if (pages)
+			put_page(page);
+	}
+	BUG_ON(pages && !list_empty(pages));
+	if (bio)
+		submit_bio(bio);
+	return 0;
+}
+
+int __init ext4_init_post_read_processing(void)
+{
+
+	//printk("Inside ext4_init_post_read_processing\n");
+
+	bio_post_read_ctx_cache =
+		kmem_cache_create("ext4_bio_post_read_ctx",
+				  sizeof(struct bio_post_read_ctx), 0, 0, NULL);
+	if (!bio_post_read_ctx_cache)
+		goto fail;
+	bio_post_read_ctx_pool =
+		mempool_create_slab_pool(NUM_PREALLOC_POST_READ_CTXS,
+					 bio_post_read_ctx_cache);
+	if (!bio_post_read_ctx_pool)
+		goto fail_free_cache;
+	return 0;
+
+fail_free_cache:
+	kmem_cache_destroy(bio_post_read_ctx_cache);
+fail:
+	return -ENOMEM;
+}
+
+void ext4_exit_post_read_processing(void)
+{
+	//printk("Inside ext4_exit_post_read_processing\n");
+
+	mempool_destroy(bio_post_read_ctx_pool);
+	kmem_cache_destroy(bio_post_read_ctx_cache);
+}

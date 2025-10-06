@@ -1,0 +1,24 @@
+* Create a parent directory containing 10,000 files of varying sizes using filebench.
+	$sudo filebench -f filemicro_rwrite_stage1.f
+
+	(This directory acts as our parent directory)
+
+* Create child and frnd directories using copy_dir.c. Run this program as root.
+	$sudo ./copy_dir /oldhome/rohit/ssdOurExt4/frnd_file_rebuilding/bigfileset/00000001 /oldhome/rohit/ssdOurExt4/frnd_file_rebuilding/bigfileset_child/00000001 /oldhome/rohit/ssdOurExt4/frnd_file_rebuilding/bigfileset_frnd/00000001
+
+* Fill some files by random write and some files by sequential write. Fill each file 50% of its size. 
+  Both these steps are done by fio. Run fill_child.c to perform both these operations using fio.
+  Run this program as root.
+
+	$sudo ./fill_child bigfileset_child/00000001
+
+* For 'k' number of child files, increment their version count. update_version_count.c does this.
+	Run this prog as root.
+
+	$sudo ./update_version_count bigfileset_child/00000001 5000
+
+* Trigger recovery. Scan all frnd and child files and trigger recovery for
+  files with mismatching version counts. This is done by recover.c.
+  Run this prog as root.
+
+	$sudo ./recover bigfileset_frnd/00000001 1

@@ -1,0 +1,6 @@
+#Units: ops/sec
+#FS		MeanThroughput	Std.dev.	
+
+Btrfs		10537		32	
+XFS		10604		222
+Ext4-FC		12156		12

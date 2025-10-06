@@ -1,0 +1,30 @@
+Experiment Goal:
+=================
+
+* Show the benefit of singleton caching.
+* Benefit can be shown in two ways:
+	- parent is cached, child uses parent's blocks
+	- multiple children use shared blocks (we use this approach)
+* Create base image with preallocated 16GB, readheavy workload files
+* Run read heavy workload inside 2 child vm's. 
+* Run vm's in cache=writeback mode
+* Allocate 4GB mem to VM's.
+* Total mem utilization in case of xfs, btrfs =  4GB by VM1 + 4GB by VM2 + 16GB host cache by VM1 + 16GB host cache by VM2
+  (Note: dirty pages are evicted to swap. Clean pages are simply discarded. So, in this read-heavy workload, we
+	won't observe swapping.)
+* Total mem utilization in case of FlexSnap, qemu= 4GB by VM1 + 4GB by VM2 + 16GB host cache by VM1 and VM2 (Read heavy workload. So, parent cache blocks will be shared)
+
+Experiment setup:
+=================
+
+* Create a 32GB qemu VM
+* Setup webserver with 16GB preallocated files
+* Keep filebench webserver settings as default expect:
+	- increasing number of files, so that, total file size becomes 16GB
+	- increasing mean file size to 32KB
+	- reduce append size to 1kB
+* Future runs of the webserver script should reuse the preallocated files
+* This vm is saved in: /oldhome/rohit/FlexSnap_VM_disks
+* Exepriment is performed for XFS, Btrfs, Qemu on Ext4, FlexSnap
+* All setups use raw vm except Qemu, which uses qcow2 image
+

@@ -1,0 +1,2 @@
+config EXT4_FS_MODULE 
+tristate "EXT4 modularized version"

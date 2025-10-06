@@ -1,0 +1,4 @@
+linux_5.5.10/jdk-21_linux-x64_bin.deb filter=lfs diff=lfs merge=lfs -text
+eval_scripts/fig15a_sqlite/benchbase_benchmark/target/benchbase-sqlite.zip filter=lfs diff=lfs merge=lfs -text
+eval_scripts/fig15a_sqlite/benchbase_benchmark/target/benchbase-sqlite.tgz filter=lfs diff=lfs merge=lfs -text
+eval_scripts/fig15a_sqlite/benchbase_benchmark/data/tpch-sf0.1/lineitem.tbl filter=lfs diff=lfs merge=lfs -text

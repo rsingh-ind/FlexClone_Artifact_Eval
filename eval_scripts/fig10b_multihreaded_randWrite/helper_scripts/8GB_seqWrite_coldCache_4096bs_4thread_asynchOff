@@ -1,0 +1,10 @@
+[seqWrite]
+rw=write
+size=1g
+ioengine=sync
+invalidate=0
+allow_file_create=0
+thread
+numjobs=4
+bs=4096
+filename=8GB_child
