@@ -109,17 +109,21 @@ echo w # Write changes
 #################################################
 #Create filesystems on newly created partitions
 #################################################
+partition_names=$(fdisk -l /dev/nvme0n1 | grep -o '^/dev/[a-zA-Z0-9]*[0-9]\+')
+partition_names=($partition_names)
+#echo "${partition_names[0]}"
+
 btrfs_mount_point="/btrfs"
-btrfs_partition="${1}1"
+btrfs_partition="${partition_names[0]}"
 
 ext4_mount_point="/ext4"
-ext4_partition="${1}2"
+ext4_partition="${partition_names[1]}"
 
 flexclone_mount_point="/flexclone"
-flexclone_partition="${1}3"
+flexclone_partition="${partition_names[2]}"
 
 xfs_mount_point="/xfs"
-xfs_partition="${1}5"
+xfs_partition="${partition_names[4]}"
 
 echo "*****************************************"
 echo "Creating filesystems on newly created partitions"
