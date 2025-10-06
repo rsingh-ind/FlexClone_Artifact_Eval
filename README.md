@@ -9,11 +9,10 @@ We provide the implementation of FlexClone in Linux kernel and relevant evaluati
 ## Table of contents
 
 - [Artifact Directory Structure](#artifact-directory-structure)
-- [Three Approaches to Test Artifact](#three-approaches-to-test-artifact)
+- [Two Approaches to Test Artifact](#two-approaches-to-test-artifact)
 	- [Setup used for evaluation](#setup-used-for-evaluation)
-	- [Using preconfigured VM image](#approach-1-using-preconfigured-vm-image)
-	- [Compiling kernel from scratch](#approach-2-compiling-kernel-from-scratch)
-	- [Using remote access to author's server](#approach-3-using-remote-access-to-authors-server)
+	- [Compiling kernel from scratch](#approach-1-compiling-kernel-from-scratch)
+	- [Using remote access to author's server](#approach-2-using-remote-access-to-authors-server)
 - [Getting Started](#getting-started)	
 - [Generating Figures and Tables](#generating-figures-and-tables)
 	- [Figures](#figures)
@@ -23,17 +22,18 @@ We provide the implementation of FlexClone in Linux kernel and relevant evaluati
 ## Artifact Directory Structure
 ```
 FlexClone_Artifact_Eval
-	|---FlexClone_VM	--- Contains VM image preconfigured with FlexClone
 	|---linux_5.5.10	--- Contains our modified Linux Kernel source code
 	|---getting_started --- Contains scripts to play around with FlexClone
 	|---eval_scripts	--- Contains scripts for generating figures and tables
-	|---eval_vm			--- Contains VM images used for experiments
 	|---README.md 		--- This document that you are reading
+	|---auto_setup.sh	--- Partitions SSD and lays out filesystems
 ```
 
 ---
-## Three Approaches to Test Artifact
-In this section, we first discuss the setup used for evaluation reported in the paper and then specify the three approaches that can be used to evaluate this artifact.
+## Two Approaches to Test Artifact
+In this section, we first discuss the setup used for evaluation reported in the paper and then specify the two approaches that can be used to evaluate this artifact.
+
+Note: In artifact abstract submission, we mentioned three approaches to test artifact. However, we couldn't upload preconfigured VM due to its large size. Approach 1 discussed below will work inside a VM also.
 
 ---
 ### Setup used for evaluation
@@ -46,55 +46,7 @@ In this section, we first discuss the setup used for evaluation reported in the 
 distribution with Linux kernel version 5.5.10.
 
 ---
-### Approach 1: Using preconfigured VM image
-- A preconfigured VM image is hosted on zenodo and link to this image is provided in `FlexClone_Artifact_Eval/FlexClone_VM` directory.  The VM image needs to be downloaded and this git repo needs to be cloned inside the VM. 
-- After booting the VM, a disk needs to be attached to this VM that will act as SSD for running experiments. Details of the VM and steps to attach disk are provided below:
-
-- *VM Image format:* qcow2
-
-- *Login Details*
-	- Username: flexclone
-	- Password: 1 
-
-- *Config*
-	- Ubuntu 24.04.3 LTS (preinstalled)
-	- Linux kernel 5.5.10 (preinstalled)
-	- 32 CPU cores (suggested)
-	- 32GB DRAM (suggested)	
-
-- *Prerequisites*
-	- Minimum 60GB of free space on host machine for storing VM image.
-	- Preferably 512 GB of additional free space on host. A file of this much size will be created and attached to VM as a disk. Four partitions will be created within this disk for four filesystems: Btrfs, XFS, Ext4 and FlexClone. 
-	
-- *Setup*
-	- [On host machine] Boot VM
-	- [On host machine] Create file on host machine to attach as disk to VM.
-```
-	//Command below creates 512 GB disk.
-	//
-	FlexClone_Artifact_Eval/FlexClone_VM # dd if=/dev/zero of=disk bs=1M count=524288
-```
--	- [On host machine] Attach created file to running VM from host. 
-	- For eg: If using `virsh` to manage VMs, then following command can be used to attach disk to running VM.
-```
-	FlexClone_Artifact_Eval/FlexClone_VM # CURDIR=$(pwd)
-	FlexClone_Artifact_Eval/FlexClone_VM # virsh attach-disk FlexClone_Artifact ${CURDIR}/disk vdb --cache none
-```
--	- [Inside VM] Run `auto_setup.sh` script present inside `FlexClone_Artifact_Eval/` directory that automatically creates partitions on the attached disk and lays out filesystems on these partitions.
-	- Note: This script sleeps internally while partitioning the disk. No user input is required.
-```
-	FlexClone_Artifact_Eval/ # ./auto_setup.sh <disk> <disk size in GB>
-```
-```
-	//Eg: If 512GB file got attached as /dev/vdb disk inside VM, then, run script as following:  
-	//
-	FlexClone_Artifact_Eval/ # ./auto_setup.sh /dev/vdb 512
-```
-
-- Setup is done. Can move on to [Getting Started](#getting-started) or [Generating Figures and Tables](#generating-figures-and-tables) sections.
-
----
-### Approach 2: Compiling kernel from scratch
+### Approach 1: Compiling kernel from scratch
 
 - *Prerequisites*
 	- Minimum 60GB of free space in the root partition for kernel compilation and installation
@@ -131,8 +83,9 @@ distribution with Linux kernel version 5.5.10.
 -	- Setup is done. Can move on to [Getting Started](#getting-started) or [Generating Figures and Tables](#generating-figures-and-tables) sections.
 
 ---
-### Approach 3: Using remote access to author's server
+### Approach 2: Using remote access to author's server
 - Login details are available upon request
+
 
 ---
 ## Getting Started
@@ -749,6 +702,7 @@ FlexClone_Artifact_Eval/eval_scripts# ./main_fig.sh 15b 1 	//Run single iteratio
 ```
 (Jump to: [Figures](#figures), [Tables](#tables))
 
+---
 ### Tables
 ---
 - `main_tab.sh` is the master script present inside `FlexClone_Artifact_Eval/eval_scripts` directory that can be used to trigger the evaluation corresponding various tables presented in the paper.
