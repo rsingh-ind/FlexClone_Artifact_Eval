@@ -47,7 +47,7 @@ distribution with Linux kernel version 5.5.10.
 
 ---
 ### Approach 1: Using preconfigured VM image
-- A preconfigured VM image is hosted on zenodo and link to this image is provided in `FlexClone_Artifact_Eval/FlexClone_VM` directory.  This VM image needs to be downloaded.
+- A preconfigured VM image is hosted on zenodo and link to this image is provided in `FlexClone_Artifact_Eval/FlexClone_VM` directory.  The VM image needs to be downloaded and this git repo needs to be cloned inside the VM. 
 - After booting the VM, a disk needs to be attached to this VM that will act as SSD for running experiments. Details of the VM and steps to attach disk are provided below:
 
 - *VM Image format:* qcow2
