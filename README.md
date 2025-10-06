@@ -125,7 +125,7 @@ FlexClone_Artifact_Eval/getting_started # cd /flexclone
 
 - `setxattr_generic` utility can be used to create clone of a file.
 - This utility takes four arguments:
-	- name of parent file (-p par_name)Open-share functionality
+	- name of parent file (-p par_name)
 	- name of child file (-c child_name)
 	- name of friend file (-f friend_name)
 	- range of blocks and their clone behaviour i.e. CoW/See-through/Open-share (-r range) 
@@ -312,7 +312,7 @@ user.SCORW_PARENT:
 		- [Figure 14b](#figure-14b)
 		- [Figure 15a](#figure-15a)
 		- [Figure 15b](#figure-15b)
-	- Following figures where workloads are run inside a VM (i.e. cloning VM image and running workload inside VM) are yet to be fully automated and added to this repository:
+	- Following figures where workloads are run inside a VM (i.e., cloning VM image and running workload inside VM) are yet to be fully automated and added to this repository:
 		- Figure 1
 		- Figure 14a
 		- Figure 16a
@@ -520,7 +520,7 @@ FlexClone_Artifact_Eval/eval_scripts# ./main_fig.sh 11 1 	//Run single iteration
 	- Copy helper scripts into the mount point
 	- Generate source file
 	- Perform clone operation for creating varying number of clones of source file (1, 2, 4, 8)
-	- Perform sequential operation on the parent file using FIO benchmark 
+	- Perform sequential write operation on the parent file using FIO benchmark 
 ```
 *Results:*
 ```
@@ -782,7 +782,7 @@ FlexClone_Artifact_Eval/eval_scripts# ./main_tab.sh 3
 	- Mount filesystem
 	- Generate preallocated/sparse source file
 	- Perform clone operation for source file (in case of FlexClone)
-	- Run random write FIO workload on preallocated file (Ext4)/sparse file (Ext4)/clone file (FlexClone)
+	- Run random write FIO workload on preallocated file(Ext4) / sparse file(Ext4)/ clone file(FlexClone)
 ```
 *Results:*
 ```
