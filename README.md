@@ -1,9 +1,9 @@
 
 # FlexClone
 
-This repository contains the artifact for the paper titled **"FlexClone: Efficient, Flexible and Pluggable File Cloning Support for Filesystems"**, to appear at 26th ACM/IFIP International Middleware Conference (Middleware 2025)
+This repository contains the artifact for the paper titled **"FlexClone: Efficient, Flexible and Pluggable File Cloning Support for Filesystems"**, to appear at the 26th ACM/IFIP International Middleware Conference (Middleware 2025)
 
-We provide the implementation of FlexClone in Linux kernel and relevant evaluation scripts and benchmarks in this artifact which can be used to reproduce the results from our paper. 
+We provide the implementation of FlexClone in the Linux kernel, along with relevant evaluation scripts and benchmarks, in this artifact, which can be used to reproduce the results from our paper. 
 
 ---
 ## Table of contents
@@ -33,7 +33,7 @@ FlexClone_Artifact_Eval
 ## Two Approaches to Test Artifact
 In this section, we first discuss the setup used for evaluation reported in the paper and then specify the two approaches that can be used to evaluate this artifact.
 
-Note: In artifact abstract submission, we mentioned three approaches to test artifact. However, we couldn't upload preconfigured VM due to its large size. Approach 1 discussed below will work inside a VM also.
+Note: In the artifact abstract submission, we mentioned three approaches to test the artifact. However, we were unable to upload the preconfigured VM due to its large size. Approach 1, discussed below, will also work inside a VM.
 
 ---
 ### Setup used for evaluation
@@ -42,8 +42,7 @@ Note: In artifact abstract submission, we mentioned three approaches to test art
 	- 32-core Intel(R) Xeon(R) CPU E5-2620 v4 CPU
 	- 32GB DDR4 Synchronous 2400 MHz DRAM (Micron 36ASF4G72PZ-2G3B1)
 	- Samsung 970 EVO Plus 512GiB NVMe-SSD
-	- Ubuntu 18.04.3 LTS
-distribution with Linux kernel version 5.5.10.
+	- Ubuntu 18.04.3 LTS distribution with Linux kernel version 5.5.10.
 
 ---
 ### Approach 1: Compiling kernel from scratch
@@ -89,7 +88,7 @@ distribution with Linux kernel version 5.5.10.
 
 ---
 ## Getting Started
-- This section aims to introduce the functionality of FlexClone using basic examples. Please refer the [Generating Figures and Tables](#generating-figures-and-tables) section for reproducing experiments present in paper.
+- This section aims to introduce the functionality of FlexClone using basic examples. Please refer to the [Generating Figures and Tables](#generating-figures-and-tables) section for reproducing experiments presented in the paper.
 - This section dicusses the following:
 	- [Preparing setup](#preparing-setup)
 	- [Creating clones](#creating-clones)
@@ -149,9 +148,9 @@ FlexClone_Artifact_Eval/getting_started # cd /flexclone
 
 ---
 ### Printing parent-child relationship details 
-- FlexClone stores cloning metadata in the extended attributes of par, child and friend files.
+- FlexClone stores cloning metadata in the extended attributes of par, child, and friend files.
 - `xattr` utility can be used to print the extended attributes of these files.
-- Let's print the extended attributes stored in par file
+- Let us print the extended attributes stored in the par file
 ```
 /flexclone# xattr -l par
 
@@ -163,12 +162,12 @@ user.c_0:
 user.c_1:
 0000   11 00 00 00 00 00 00 00                            ........
 ```
-- In above output, parent has two key-value pairs.
-	- `c_0` is key corresponding first child and `0F` is the inode number of the child file (in hexadecimal).
- 	- `c_1` is key corresponding second child and `11` is the inode number of the child file (in hexadecimal).
+- In the above output, the parent has two key-value pairs.
+	- `c_0` is the key corresponding to the first child, and `0F` is the inode number of the child file (in hexadecimal).
+ 	- `c_1` is the key corresponding to the second child, and `11` is the inode number of the child file (in hexadecimal).
  	- Note: Inode numbers of child files `c1` and `c2`can be found using `# ls -i c1` and `# ls -i c2` commands
  
- - Let's print the extended attributes stored in first child file, `c1`
+ - Let us print the extended attributes stored in the first child file, `c1`
 ```
 /flexclone# xattr -l c1
 
@@ -193,8 +192,8 @@ user.SCORW_PARENT:
 0000   0E 00 00 00 00 00 00 00                            ........
 
 ```
-- In above output, child has multiple key-value pairs.
-	- `COPY_SIZE` is the size of parent file at the clone time (hexadecimal, little-endian)
+- In the above output, the child has multiple key-value pairs.
+	- `COPY_SIZE` is the size of the parent file at the clone time (hexadecimal, little-endian)
 	
 		(00 00 10 00 00 00 00 00  --> 00 10 00 00 (Correct order, hexadecimal) --> 1048576 (decimal) --> 2^20 i.e. 1MB)
 	
@@ -209,8 +208,8 @@ user.SCORW_PARENT:
 ---
 ### CoW and See-through functionality
 - Note: 
-	- Utilities like `head`, `cat` or editors like `Vim` can be used to read parent and child files.
-	- However, *do not modify* the parent/child files using editors such as Vim. On modifying the contents of a file, Vim actually writes the contents of the file  to a new file and then deletes the original file and renames the new file as the original file. The manner in which Vim tries to preserve the extended attributes of the deleted file is currently incompatible with FlexClone. As a result newly written file will loose its child status. We have left fixing this incompatibility as a future work.
+	- Utilities like `head`, `cat`, or editors like `Vim` can be used to read parent and child files.
+	- However, *do not modify* the parent/child files using editors such as Vim. When modifying the contents of a file, Vim actually writes the new contents to a new file, then deletes the original file, and renames the new file to match the original file's name. The manner in which Vim tries to preserve the extended attributes of the deleted file is currently incompatible with FlexClone. As a result, the newly written file will no longer have child status. We have left fixing this incompatibility as future work.
 	- We have provided a custom utility, named `write`, that can be used to modify the contents of a file. This utility writes random data to specified file blocks.
 	- Usage: `#./write <file to modify> <byte offset to start writing from> <length of write>`
 	- Eg: `#./write c1 0 100`	//write 100 bytes of data from byte 0 (Block 0) onwards to file c1 
@@ -233,7 +232,7 @@ user.SCORW_PARENT:
 	- `/flexclone# head -c 4110 par | tail -c 14`	//Read first 14 bytes of Block 1 of parent 
 	- `/flexclone# head -c 4110 c1 | tail -c 14`	//Read first 14 bytes of Block 1 of c1
 	- `/flexclone# head -c 4110 c2 | tail -c 14`	//Read first 14 bytes of Block 1 of c2
-	- Parents data is modified. 
+	- Parents' data is modified. 
 	- Child c1 contains the original block contents due to CoW operation on write to parent.
 	- Child c2 contains the same contents as the parent file because it is configured in See-through mode.  
 	
@@ -264,14 +263,14 @@ user.SCORW_PARENT:
 	- `/flexclone# vim c1`	//Reading child file c1
 	- `/flexclone# vim par`	//Reading parent file par
 	- First 100 bytes of c1 have been modified
-	- First 100 bytes of parent are same as c1 because both child and parent
+	- First 100 bytes of parent are the same as c1 because both child and parent
 	  can modify a shared block in Open-share mode.
 
 (Jump to: [Getting Started](#getting-started))
 
 ---
 ### Some Limitations
-- Following functionalities are yet to be added in the prototype implementation:
+- The following functionalities are yet to be added in the prototype implementation:
 	- Parent file should only be deleted after the shared parent blocks have been copied to the target child files
 	- Truncation, Direct-IO and mmap() support is not yet implemented
 
@@ -281,16 +280,16 @@ user.SCORW_PARENT:
 
 ---
 ## Generating Figures and Tables
-- Two driver scripts (`main_fig.sh` and `main_tab.sh`) present inside `FlexClone_Artifact_Eval/eval_scripts` directory can be used to trigger the evaluation corresponding various [figures](#figures) and [tables](#tables) presented in the paper.
+- Two driver scripts (`main_fig.sh` and `main_tab.sh`) present inside the `FlexClone_Artifact_Eval/eval_scripts` directory can be used to trigger the evaluation corresponding to various [figures](#figures) and [tables](#tables) presented in the paper.
 - Note: 
-	- The terms `ourExt4`, `flexclone` , `scorw` and `dcopy` within  scripts and source code refer to FlexClone itself.
+	- The terms `ourExt4`, `flexclone`, `scorw`, and `dcopy` within scripts and source code refer to FlexClone itself.
 	- The term `source file` used in this README implies parent file/base file.
 
 ---
 ### Figures
 ---
-- `main_fig.sh` is the master script present inside `FlexClone_Artifact_Eval/eval_scripts` directory that can be used to trigger the evaluation corresponding various figures presented in the paper.
-- `main_fig.sh` takes two command line arguments: 
+- `main_fig.sh` is the master script present inside `FlexClone_Artifact_Eval/eval_scripts` directory that can be used to trigger the evaluation corresponding to various figures presented in the paper.
+- `main_fig.sh` takes two command-line arguments: 
 	1. figure number 
 	2. number of iterations (how many times to perform the experiment)
 - Example: 
@@ -298,9 +297,9 @@ user.SCORW_PARENT:
  		# ./main_fig.sh 8 10 		//Run experiment corresponding figure 8 ten times
         # ./main_fig.sh 13a 1  		//Run experiment corresponding figure 13a only once
 ```
-- Note: Run `main_fig.sh` as root user, as shown in above example 
-- A short summary corresponding each figure's evaluation process is provided below.
-	- Figures using microbenchmarks and macrobenchmarks, such as, Fio, Filebench, SQLite etc. workloads.
+- Note: Run `main_fig.sh` as root user, as shown in the above example 
+- A summary of each figure's evaluation process is provided below.
+	- Figures using microbenchmarks and macrobenchmarks, such as Fio, Filebench, SQLite, etc., workloads.
 		- [Figure 8](#figure-8)
 		- [Figure 9a](#figure-9a)
 		- [Figure 9b](#figure-9b)
@@ -705,8 +704,8 @@ FlexClone_Artifact_Eval/eval_scripts# ./main_fig.sh 15b 1 	//Run single iteratio
 ---
 ### Tables
 ---
-- `main_tab.sh` is the master script present inside `FlexClone_Artifact_Eval/eval_scripts` directory that can be used to trigger the evaluation corresponding various tables presented in the paper.
-- `main_tab.sh` takes one command line argument: 
+- `main_tab.sh` is the master script present inside `FlexClone_Artifact_Eval/eval_scripts` directory that can be used to trigger the evaluation corresponding to various tables presented in the paper.
+- `main_tab.sh` takes one command-line argument: 
 	1. table number 
 - Example: 
 ```
