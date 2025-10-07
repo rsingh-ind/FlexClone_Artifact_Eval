@@ -788,6 +788,7 @@ Observe the performance of various FIO workloads inside VM.
 
 ---
 ###Figure 16a and 16b
+
 *Experiment Goal:*
 ```
 Observe the benefit of See-through clone configuration
