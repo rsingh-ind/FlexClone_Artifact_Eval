@@ -315,8 +315,7 @@ user.SCORW_PARENT:
 	- Following figures where workloads are run inside a VM (i.e., cloning VM image and running workload inside VM) require a VM to be setup before running each experiment:
 		- [Figure 1](#figure-1)
 		- [Figure 14a](#figure-14a)
-		- Figure 16a
-		- Figure 16b
+		- [Figure 16a and 16b](#figure-16a-and-16b)
 
 (Jump to: [Figures](#figures), [Tables](#tables))
 
@@ -785,7 +784,39 @@ Observe the performance various FIO workloads inside VM.
 # fio 8GB_randWrite_coldCache_4096bs_Ext4_1thread_asynchOff
 ```
 
+---
+###Figure 16a and 16b
+*Experiment Goal:*
+```
+Observe the benefit of See-through clone configuration
+```
 
+*Setup:*
+
+- This experiment performs kernel installation inside a VM, thus requiring a VM to be set up.
+- To perform this experiment, set up a 32GB QEMU VM. This VM image will be used as the parent file/parent VM.
+- Assign separate 4GB partition for /boot and separate 12GB partition for /lib/modules during kernel installation.
+- Modify fstab to automatically mount /lib/modules partition on boot. 
+- Make /boot/grub/grubenv in base image as immutable.
+        $ sudo chattr +i /boot/grub/grubenv
+- Disable journaling on /boot and /lib/modules filesystems.
+- Add kernel installation dependencies in base VM
+- Add 5.5.10 kernel source code in a separate disk attached to VM and compile this kernel with minimal .config file to reduce to the number of modules required to be installed.
+- Convert the VM image format from `qcow2` to `raw`.
+- Use `fdisk` to note down the range of blocks allocated to the /boot and /lib/modules partitions. This range will be used later during cloning.
+- Shutdown parent VM.
+- Create four child VM images by providing appropriate clone ranges during clone operation. For example: 
+```
+# ./setxattr_generic -c seethrough.copy1 -p seethrough.raw -f seethrough.frnd1 -r 258:999935:3,1000194:3999999:3
+```
+- Boot all child VMs and parent VM.
+- Attach disk containing compiled Linux into base VM. 
+- Trigger kernel installation commands inside base VM:
+```
+# make modules_install
+# make install
+```
+- CPU and Memory utilization on the host can be captured using tools, such as `sar`.
 
 ---
 ### Tables
