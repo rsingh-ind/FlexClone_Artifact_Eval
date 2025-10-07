@@ -762,6 +762,8 @@ Observe the impact of duplicate caching.
 ```
 - Memory utilization on the host can be captured using tools, such as `sar`.
 
+(Jump to: [Figures](#figures), [Tables](#tables))
+
 ---
 ### Figure 14a
 *Experiment Goal:*
@@ -786,8 +788,10 @@ Observe the performance of various FIO workloads inside VM.
 # fio 8GB_randWrite_coldCache_4096bs_Ext4_1thread_asynchOff
 ```
 
+(Jump to: [Figures](#figures), [Tables](#tables))
+
 ---
-###Figure 16a and 16b
+### Figure 16a and 16b
 
 *Experiment Goal:*
 ```
@@ -820,6 +824,8 @@ Observe the benefit of See-through clone configuration
 # make install
 ```
 - CPU and Memory utilization on the host can be captured using tools, such as `sar`.
+
+(Jump to: [Figures](#figures), [Tables](#tables))
 
 ---
 ### Tables
