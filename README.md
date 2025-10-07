@@ -312,8 +312,8 @@ user.SCORW_PARENT:
 		- [Figure 14b](#figure-14b)
 		- [Figure 15a](#figure-15a)
 		- [Figure 15b](#figure-15b)
-	- Following figures where workloads are run inside a VM (i.e., cloning VM image and running workload inside VM) are yet to be fully automated and added to this repository:
-		- Figure 1
+	- Following figures where workloads are run inside a VM (i.e., cloning VM image and running workload inside VM) require a VM to be setup before running each experiment:
+		- [Figure 1](#figure-1)
 		- Figure 14a
 		- Figure 16a
 		- Figure 16b
@@ -733,6 +733,35 @@ FlexClone_Artifact_Eval/eval_scripts# ./main_fig.sh 15b 1 	//Run single iteratio
 - Log file for the experiment is stored in  "FlexClone_Artifact_Eval/eval_scripts/fig15b_sqlite" directory with experiment timestamp being the name of the log file (Eg: log_20250926_181210).
 ```
 (Jump to: [Figures](#figures), [Tables](#tables))
+
+
+---
+### Figure 1
+*Experiment Goal:*
+```
+Observe the impact of duplicate caching.
+```
+
+*Setup:*
+
+- This experiment runs a Webserver workload inside a VM, thus requiring a VM to be set up.
+- To perform this experiment, set up a 32GB QEMU VM. This VM image will be used as the parent file/parent VM.
+- Copy the Webserver scripts present inside `vm_experiments_scripts/fig1/` directory to the parent VM image.
+- Run Filebench Webserver workload inside this parent VM to preallocate ~16GB files. Before running Filebench, disable ASLR inside the VM:
+```
+# echo 0 | sudo tee /proc/sys/kernel/randomize_va_space
+# filebench -f webserver.f
+```
+- Convert the VM image format from `qcow2` to `raw`.
+- For XFS, Btrfs, and FlexClone, clone the parent VM image to create two child VMs. Allocate 4GB DRAM and 8 CPU cores to each child VM.
+- Inside child VMs run `webserver.f.reuse` workload
+```
+# echo 0 | sudo tee /proc/sys/kernel/randomize_va_space
+# filebench -f webserver.f.reuse
+```
+- Memory utilization on the host can be captured using tools, such as `sar`.
+
+
 
 ---
 ### Tables
