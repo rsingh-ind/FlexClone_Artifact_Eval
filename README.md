@@ -753,7 +753,7 @@ Observe the impact of duplicate caching.
 # filebench -f webserver.f
 ```
 - Convert the VM image format from `qcow2` to `raw`.
-- For XFS, Btrfs, and FlexClone, clone the parent VM image to create two child VMs. Allocate 4GB DRAM and 8 CPU cores to each child VM.
+- For XFS, Btrfs, and FlexClone, clone the parent VM image to create two child VMs. Allocate 4GB DRAM and 8 CPU cores to each child VM. Set child VM caching mode to `writeback`.
 - Inside child VMs run `webserver.f.reuse` workload
 ```
 # echo 0 | sudo tee /proc/sys/kernel/randomize_va_space
