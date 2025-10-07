@@ -314,7 +314,7 @@ user.SCORW_PARENT:
 		- [Figure 15b](#figure-15b)
 	- Following figures where workloads are run inside a VM (i.e., cloning VM image and running workload inside VM) require a VM to be setup before running each experiment:
 		- [Figure 1](#figure-1)
-		- Figure 14a
+		- [Figure 14a](#figure-14a)
 		- Figure 16a
 		- Figure 16b
 
@@ -760,6 +760,30 @@ Observe the impact of duplicate caching.
 # filebench -f webserver.f.reuse
 ```
 - Memory utilization on the host can be captured using tools, such as `sar`.
+
+---
+### Figure 14a
+*Experiment Goal:*
+```
+Observe the performance various FIO workloads inside VM.
+```
+
+*Setup:*
+
+- This experiment runs FIO workloads inside a VM, thus requiring a VM to be set up.
+- To perform this experiment, set up a 32GB QEMU VM. This VM image will be used as the parent file/parent VM.
+- Copy the FIO scripts present inside `vm_experiments_scripts/fig14a/` directory to the parent VM image.
+- Create an 8GB file inside parent VM using the following command:
+```
+# dd if=/dev/urandom of=8GB_child bs=1M count=8192
+```
+- Convert the VM image format from `qcow2` to `raw`.
+- For XFS, Btrfs, and FlexClone, clone the parent VM image to create a child VM. Allocate 16GB DRAM and 1 CPU core to the child. Set child VM caching mode to `writeback`.
+- Inside child VMs run FIO workload
+```
+# fio 8GB_seqWrite_coldCache_4096bs_Ext4_1thread_asynchOff
+# fio 8GB_randWrite_coldCache_4096bs_Ext4_1thread_asynchOff
+```
 
 
 
