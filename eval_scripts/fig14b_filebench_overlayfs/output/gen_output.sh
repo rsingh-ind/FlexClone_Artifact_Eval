@@ -3,7 +3,7 @@ filesystem=("btrfs" "ext4" "xfs" "flexclone")
 workload=("micro_append" "fileserver" "varmail")
 
 plot_name="ssd_out_filebench_child_ops_per_sec"
-touch $plot_name
+>$plot_name
 echo "# M=mean, SD=std. dev." >> "$plot_name"
 echo "#		Btrfs		Btrfs		Ext4	Ext4	XFS		XFS	FlexClone	FlexClone" >> "$plot_name"
 echo "#		M		SD		M	SD	M	    SD		M		SD" >> "$plot_name"

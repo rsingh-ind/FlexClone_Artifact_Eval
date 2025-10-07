@@ -599,6 +599,7 @@ void wbc_attach_and_unlock_inode(struct writeback_control *wbc,
 	if(IS_ERR_OR_NULL(wbc->wb))
 	{
 		inode_attach_wb(inode, NULL);
+		wbc->wb = inode_to_wb(inode);
 	}
 	//scorw end
 	wbc->inode = inode;

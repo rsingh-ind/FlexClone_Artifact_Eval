@@ -23,10 +23,10 @@ then
 fi
 
 
-#fs=("flexclone" "btrfs" "xfs" "ext4")
-#workload=("micro_append_stage1.f" "micro_append_stage2.f" "fileserver_stage1.f" "fileserver_stage2.f" "varmail_stage1.f" "varmail_stage2.f")
 fs=("flexclone" "btrfs" "xfs" "ext4")
 workload=("micro_append_stage1.f" "micro_append_stage2.f" "fileserver_stage1.f" "fileserver_stage2.f" "varmail_stage1.f" "varmail_stage2.f")
+#fs=("flexclone" "btrfs" "xfs" "ext4")
+#workload=("micro_append_stage1.f" "micro_append_stage2.f")
 curdir=$(pwd)
 
 dev="ssd"
@@ -52,7 +52,7 @@ do
 
 	#Prepare setup
         cd $curdir
-	echo "$0 unmounting $fs from $dev.."
+	echo "$0 unmounting $mount from $dev.."
 	mountpoint -q "$mount"
 	status=$?
 	if [ $status -eq 0 ]; then
@@ -65,7 +65,7 @@ do
 	fi
 
 	#fresh mount
-	mount_cmd=$(../mount_info.sh $fs $dev 1)
+	mount_cmd=$(../mount_info.sh $i $dev 1)
 	$($mount_cmd)
 	if [ $? != 0 ]
 	then
