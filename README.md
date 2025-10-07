@@ -27,6 +27,8 @@ FlexClone_Artifact_Eval
 	|---eval_scripts	--- Contains scripts for generating figures and tables
 	|---README.md 		--- This document that you are reading
 	|---auto_setup.sh	--- Partitions SSD and lays out filesystems
+	|---vm_experiments_scripts --- Contains workload scripts for experiments requiring VM cloning
+
 ```
 
 ---
