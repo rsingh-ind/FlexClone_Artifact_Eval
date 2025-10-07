@@ -766,7 +766,7 @@ Observe the impact of duplicate caching.
 ### Figure 14a
 *Experiment Goal:*
 ```
-Observe the performance various FIO workloads inside VM.
+Observe the performance of various FIO workloads inside VM.
 ```
 
 *Setup:*
