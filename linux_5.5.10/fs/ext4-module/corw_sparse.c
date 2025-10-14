@@ -28,22 +28,6 @@
 #include <linux/writeback.h>
 #include <linux/vmstat.h>
 
-/*
-Notes:
-1) We are assuming that
-	a) when a par-child relationship gets established, at that time, parent file is not open.
-	b) when child file is being unlinked, at that time, parent and child both are not open
-
-	One advantage of this is that we don't need to protect 'parent->i_child_scorw_inode[]' using parent's lock because, contents of
-	this array won't change while parent file is open.
-
-	This solves lock conflicts such as contention between write_par() and page_copy_thread_fn() to acquire parent's lock to protect this array
-
-2) Update: Above assumptions are cancelled now. Our code can handle/is progressing towards handling above cases.
-   New assumptions:
-   	a) open(child) and open(par) won't happen in parallel to unlink(child)
-*/
-
 static ssize_t sysfs_async_copy_status_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf);
 static ssize_t sysfs_async_copy_status_store(struct kobject *kobj, struct kobj_attribute *attr, const char *buf, size_t count);
 void scorw_inc_process_usage_count(struct scorw_inode *scorw_inode);
@@ -1308,11 +1292,6 @@ int scorw_set_page_dirty(struct page *page)
 }
 
 
-//set_bit() works are 64 bits granularity. We can't afford to lock 64 bits during
-//multithreaded ops, especially, sequential write
-//
-//So, directly performing setting of bit at 1 byte granularity
-//
 //Args:
 //	bitnum: which bit in 1 byte to set?
 //	p:	address of byte whose bit is to be set
