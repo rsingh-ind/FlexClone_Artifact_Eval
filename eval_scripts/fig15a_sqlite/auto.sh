@@ -305,8 +305,8 @@ done
 cd output
 ./gen_output.sh
 gnuplot plot_sqlite_commit.p
-epstopdf sqlite-commit-flexsnap.eps
-cp sqlite-commit-flexsnap.pdf ..
+epstopdf sqlite_commit_flexclone.eps
+cp sqlite_commit_flexclone.pdf ..
 disable_sync_mode
 exit 0
 

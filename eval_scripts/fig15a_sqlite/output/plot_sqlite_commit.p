@@ -20,7 +20,7 @@ set key samplen 2
 set key horizontal left tmargin
 
 
-set output "sqlite-commit-flexsnap.eps"
+set output "sqlite_commit_flexclone.eps"
 plot 'sqlite_summary' u 2:3:xtic(1) title "SQLite" fillstyle pattern 5 lc rgb "#FF0000",\
 '' u 4:5:xtic(1) title "SQLite-FC" fillstyle pattern 4 lc rgb "#0000FF"
 

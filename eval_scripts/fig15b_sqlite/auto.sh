@@ -258,7 +258,7 @@ done
 cd output
 ./gen_output.sh
 gnuplot plot_sqlite_commit.p
-epstopdf sqlite-commit-XFS.eps
-cp sqlite-commit-XFS.pdf ..
+epstopdf sqlite_commit_XFS.eps
+cp sqlite_commit_XFS.pdf ..
 exit 0
 

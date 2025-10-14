@@ -28,7 +28,7 @@ set key horizontal left tmargin
 #plot 'sqlite_summary' u 6:7:xtic(1) title "SQLite" fillstyle pattern 5 lc rgb "#FF0000",\
 #'' u 8:9:xtic(1) title "SQLite-Btrfs" fillstyle pattern 4 lc 4
 
-set output "sqlite-commit-XFS.eps"
+set output "sqlite_commit_XFS.eps"
 plot 'sqlite_summary' u 2:3:xtic(1) title "SQLite" fillstyle pattern 5 lc rgb "#FF0000",\
 '' u 4:5:xtic(1) title "SQLite-XFS" fillstyle pattern 4 lc rgb "#0000FF"
 
