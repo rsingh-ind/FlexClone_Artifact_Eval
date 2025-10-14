@@ -28,6 +28,22 @@
 #include <linux/writeback.h>
 #include <linux/vmstat.h>
 
+/*
+Notes:
+1) We are assuming that
+	a) when a par-child relationship gets established, at that time, parent file is not open.
+	b) when child file is being unlinked, at that time, parent and child both are not open
+
+	One advantage of this is that we don't need to protect 'parent->i_child_scorw_inode[]' using parent's lock because, contents of
+	this array won't change while parent file is open.
+
+	This solves lock conflicts such as contention between write_par() and page_copy_thread_fn() to acquire parent's lock to protect this array
+
+2) Update: Above assumptions are cancelled now. Our code can handle/is progressing towards handling above cases.
+   New assumptions:
+   	a) open(child) and open(par) won't happen in parallel to unlink(child)
+*/
+
 static ssize_t sysfs_async_copy_status_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf);
 static ssize_t sysfs_async_copy_status_store(struct kobject *kobj, struct kobj_attribute *attr, const char *buf, size_t count);
 void scorw_inc_process_usage_count(struct scorw_inode *scorw_inode);
@@ -1216,7 +1232,7 @@ unsigned long long scorw_get_block_copied_8bytes(struct inode *inode, loff_t blk
         unsigned long long byte_value= 0;
 	unsigned long long byte_num_alignedto_8bytes_boundary = 0;	
 
-        //printk("%s() called. blk_num: %llu\n", __func__, blk_num);
+        printk("%s() called. blk_num: %llu\n", __func__, blk_num);
 
 
         //Single 4KB can store 32768 bits (2^15) i.e. copy status of 2^15 blocks
@@ -1228,15 +1244,15 @@ unsigned long long scorw_get_block_copied_8bytes(struct inode *inode, loff_t blk
                 return -1;
         }
         blk_num = blk_num%PAGE_BLOCKS;
-        //printk("%s(): blk_num: %llu\n", __func__, blk_num);
+        printk("%s(): blk_num: %llu\n", __func__, blk_num);
 
         kaddr = kmap_atomic(page);
         byte_num = ((blk_num)/8);
-        //printk("%s(): byte_num: %llu\n", __func__, byte_num);
+        printk("%s(): byte_num: %llu\n", __func__, byte_num);
 	byte_num_alignedto_8bytes_boundary = ((byte_num >> 3) << 3);	//align byte_num to 8bytes boundary
-        //printk("%s(): byte_num_alignedto_8bytes_boundary: %llu\n", __func__, byte_num_alignedto_8bytes_boundary);
+        printk("%s(): byte_num_alignedto_8bytes_boundary: %llu\n", __func__, byte_num_alignedto_8bytes_boundary);
         byte_value = *((unsigned long long*)(kaddr+byte_num_alignedto_8bytes_boundary));
-        //printk("%s(): byte_value: %llu\n", __func__, byte_value);
+        printk("%s(): byte_value: %llu\n", __func__, byte_value);
         kunmap_atomic(kaddr);
 
         scorw_put_page(page);
@@ -1292,7 +1308,10 @@ int scorw_set_page_dirty(struct page *page)
 }
 
 
-//Directly performing setting of bit at 1 byte granularity
+//set_bit() works are 64 bits granularity. We can't afford to lock 64 bits during
+//multithreaded ops, especially, sequential write
+//
+//So, directly performing setting of bit at 1 byte granularity
 //
 //Args:
 //	bitnum: which bit in 1 byte to set?
@@ -3336,8 +3355,12 @@ int scorw_put_inode(struct inode *inode, int is_child_inode, int is_thread_putti
 			{
 				//On unlinking of child file, delete it as target
 				//from page copy structs
+				//and
+				//detach from parent if it exists
 				if(scorw_inode->i_at_index != -1)
 				{
+					p_scorw_inode = scorw_inode->i_par_vfs_inode->i_scorw_inode;
+
 					read_lock(&(page_copy_lock));
 					head = &page_copy_llist;
 					list_for_each(curr, head)
@@ -3347,6 +3370,23 @@ int scorw_put_inode(struct inode *inode, int is_child_inode, int is_thread_putti
 						//printk("scorw_put_inode: block_num: %u, parent inode num: %lu", curr_page_copy->block_num, curr_page_copy->par->i_ino_num);
 					}
 					read_unlock(&(page_copy_lock));
+
+
+					down_write(&(p_scorw_inode->i_lock));
+					p_scorw_inode->i_child_scorw_inode[scorw_inode->i_at_index] = 0;
+					if(scorw_inode->i_at_index == p_scorw_inode->i_last_child_index)
+					{
+						p_scorw_inode->i_last_child_index = -1;	//in case parent has no child
+						for(q=scorw_inode->i_at_index-1; q>= 0; q--)
+						{
+							if(p_scorw_inode->i_child_scorw_inode[q])
+							{
+								p_scorw_inode->i_last_child_index = q;
+								break;
+							}
+						}
+					}
+					up_write(&(p_scorw_inode->i_lock));
 				}
 
 				//cleanup extended attributes irrespective of parent being open or not
@@ -4374,6 +4414,26 @@ int scorw_unlink_child_file(struct inode *c_inode)
 		//mark child scorw inode as orphan
 		//printk("%s(): marked child: %lu scorw as orphan\n", __func__, c_inode->i_ino);
 		c_scorw_inode->i_ino_unlinked = 1;
+
+		//parent is open while child is being deleted
+		//Note: We only handle the case for parent being open and child
+		//scorw inode being open due to parent.
+		//i.e. We donot handle the case for parent and child files
+		//both being open and simulatenously child getting deleted.
+		//
+		//For now, we can assume that child deletion is disallowed in that
+		//case.
+		if(p_scorw_inode)
+		{
+			mutex_unlock(&(c_inode->i_vfs_inode_open_close_lock));
+			//put on behalf of parent
+			scorw_put_inode(c_inode, 1, 0, 0);
+		}
+		//parent is not open while child is being deleted
+		else
+		{
+			mutex_unlock(&(c_inode->i_vfs_inode_open_close_lock));
+		}
 	}
 	else
 	{
@@ -4390,11 +4450,10 @@ int scorw_unlink_child_file(struct inode *c_inode)
 				break;
 			}
 		}
-
+		mutex_unlock(&(c_inode->i_vfs_inode_open_close_lock));
 	}
 	mutex_unlock(&(p_inode->i_vfs_inode_open_close_lock));
 	iput(p_inode);
-	mutex_unlock(&(c_inode->i_vfs_inode_open_close_lock));
 
 	return 0;
 }

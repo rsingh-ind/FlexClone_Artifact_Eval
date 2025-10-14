@@ -44,18 +44,21 @@ fi
 #########################################
 function disable_sync_mode ()
 {
+	curdir=$(pwd)
 	MODULE_FILE="${module_path}/fs/ext4-module/corw_sparse.c"
 	OLD_LINE='scorw_inode_write_and_wait_range(c_scorw_inode->i_vfs_inode, 0, c_scorw_inode->i_copy_size);'
 	NEW_LINE='//scorw_inode_write_and_wait_range(c_scorw_inode->i_vfs_inode, 0, c_scorw_inode->i_copy_size);'
 
 	sed -i "s|$OLD_LINE|$NEW_LINE|" $MODULE_FILE
 
-	$(${module_path}make_ext4_module.sh)
+	cd $module_path
+	./make_ext4_module.sh
 	if [ $? != 0 ]
 	then
 		echo "Failed to disable sync-mode in FlexClone module"
 		exit -1
 	fi
+	cd $curdir
 }
 
 #########################################
@@ -63,23 +66,25 @@ function disable_sync_mode ()
 #########################################
 function enable_sync_mode ()
 {
+	curdir=$(pwd)
 	MODULE_FILE="${module_path}/fs/ext4-module/corw_sparse.c"
 	OLD_LINE='//scorw_inode_write_and_wait_range(c_scorw_inode->i_vfs_inode, 0, c_scorw_inode->i_copy_size);'
 	NEW_LINE='scorw_inode_write_and_wait_range(c_scorw_inode->i_vfs_inode, 0, c_scorw_inode->i_copy_size);'
 
 	sed -i "s|$OLD_LINE|$NEW_LINE|" $MODULE_FILE
 
-	$(${module_path}make_ext4_module.sh)
+	cd $module_path
+	./make_ext4_module.sh
 	if [ $? != 0 ]
 	then
 		echo "Failed to enable sync-mode in FlexClone module"
 		disable_sync_mode
 		exit -1
 	fi
+	cd $curdir
 }
 
 enable_sync_mode
-exit
 
 for i in ${fs[@]}
 do

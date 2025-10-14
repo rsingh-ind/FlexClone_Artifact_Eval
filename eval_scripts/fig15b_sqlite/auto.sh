@@ -79,7 +79,7 @@ do
 
         #copy relevant files to target filesystem
         echo "copying benchbase to $i filesystem"
-	cp -r $benchbase_root $dest
+	cp -r -L $benchbase_root $dest
 
 	if [ $i == "dcopy" ]
 	then
@@ -104,10 +104,10 @@ do
 		if [ $fs_sub_case == 1 ]
 		then
 			echo "copying zip file containing VANILLA sqlite library to $i filesystem"
-			cp "sqlite_libraries/orig/sqlite-jdbc-3.42.0.0.jar" "${dest}/${benchbase_lib}"
+			cp -L "sqlite_libraries/orig/sqlite-jdbc-3.42.0.0.jar" "${dest}/${benchbase_lib}"
 		else
 			echo "copying zip file containing MODIFIED sqlite library to $i filesystem"
-			cp "sqlite_libraries/btrfs_xfs/sqlite-jdbc-3.42.0.0.jar" "${dest}/${benchbase_lib}"
+			cp -L "sqlite_libraries/btrfs_xfs/sqlite-jdbc-3.42.0.0.jar" "${dest}/${benchbase_lib}"
 		fi
 	else
 		echo "Error: Invalid filesystem: $i"
@@ -171,6 +171,7 @@ do
 					if [ $? != 0 ]
 					then
 						echo "Error: Failed to run benchbase.."
+						exit -1
 					fi
 					echo "======================== $i $wl $k VANILLA SQLite========================" >> "${outPath}/out_${i}_${wl}_vanillaSqlite"
 				elif [ $fs_sub_case == 2 ]
@@ -179,6 +180,7 @@ do
 					if [ $? != 0 ]
 					then
 						echo "Error: Failed to run benchbase.."
+						exit -1
 					fi
 					echo "======================== $i $wl $k MODIFIED SQLite========================" >> "${outPath}/out_${i}_${wl}_modifiedSqlite"
 				fi
@@ -190,6 +192,7 @@ do
 					if [ $? != 0 ]
 					then
 						echo "Error: Failed to run benchbase.."
+						exit -1
 					fi
 					echo "======================== $i $wl $k VANILLA SQLite========================" >> "${outPath}/out_${i}_${wl}_vanillaSqlite"
 				elif [ $fs_sub_case == 2 ]
@@ -198,6 +201,7 @@ do
 					if [ $? != 0 ]
 					then
 						echo "Error: Failed to run benchbase.."
+						exit -1
 					fi
 					echo "======================== $i $wl $k MODIFIED SQLite========================" >> "${outPath}/out_${i}_${wl}_modifiedSqlite"
 				fi
@@ -206,6 +210,7 @@ do
 				if [ $? != 0 ]
 				then
 					echo "Error: Failed to run benchbase.."
+					exit -1
 				fi
 				echo "======================== $i $wl $k ========================" >> "${outPath}/out_${i}_${wl}"
 			fi
