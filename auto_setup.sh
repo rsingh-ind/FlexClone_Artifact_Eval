@@ -17,7 +17,7 @@ fi
 ##########################
 if [[ $# != 2 ]]
 then
-	echo "Usage: $0 <device name. Eg: /dev/vdb>, /dev/nvme0n1 <device size in GB. Eg: 512>"
+	echo "Usage: $0 <device name. Eg: /dev/vdb, /dev/nvme0n1>, /dev/nvme0n1 <device size in GB. Eg: 512>"
 	exit -1
 fi
 
@@ -109,7 +109,7 @@ echo w # Write changes
 #################################################
 #Create filesystems on newly created partitions
 #################################################
-partition_names=$(fdisk -l /dev/nvme0n1 | grep -o '^/dev/[a-zA-Z0-9]*[0-9]\+')
+partition_names=$(fdisk -l $1 | grep -o '^/dev/[a-zA-Z0-9]*[0-9]\+')
 partition_names=($partition_names)
 #echo "${partition_names[0]}"
 
