@@ -39,7 +39,7 @@ fi
 #Make sure that device is large enough
 ###########################################
 num_partitions=4
-min_partition_size_GB=20
+min_partition_size_GB=100
 
 each_partition_size=$(($2/${num_partitions}))
 echo "each partition will be of the size: $each_partition_size GB"
