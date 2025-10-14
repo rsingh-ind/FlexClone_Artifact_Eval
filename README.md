@@ -761,7 +761,7 @@ Observe the impact of duplicate caching.
 # filebench -f webserver.f.reuse
 ```
 - Memory utilization on the host can be captured using tools, such as `sar`.
-- Note: Sample script `remote.sh` to run VM is provided in `vm_experiments_scripts/fig1/` directory.
+- Note: Sample script `(remote.sh)` to run VM is provided in `vm_experiments_scripts/fig1/` directory.
 
 (Jump to: [Figures](#figures), [Tables](#tables))
 
@@ -788,7 +788,7 @@ Observe the performance of various FIO workloads inside VM.
 # fio 8GB_seqWrite_coldCache_4096bs_Ext4_1thread_asynchOff
 # fio 8GB_randWrite_coldCache_4096bs_Ext4_1thread_asynchOff
 ```
-- Note: Sample script `remote.sh` to run VM is provided in `vm_experiments_scripts/fig14a/` directory.
+- Note: Sample script `(remote.sh)` to run VM is provided in `vm_experiments_scripts/fig14a/` directory.
 
 (Jump to: [Figures](#figures), [Tables](#tables))
 
@@ -826,7 +826,7 @@ Observe the benefit of See-through clone configuration
 # make install
 ```
 - CPU and Memory utilization on the host can be captured using tools, such as `sar`.
-- Note: Sample script `remote.sh` to run VMs is provided in `vm_experiments_scripts/fig16/` directory.
+- Note: Sample script `(remote.sh)` to run VMs is provided in `vm_experiments_scripts/fig16/` directory.
 
 (Jump to: [Figures](#figures), [Tables](#tables))
 
