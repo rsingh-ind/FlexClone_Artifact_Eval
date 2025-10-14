@@ -35,6 +35,8 @@ FlexClone_Artifact_Eval
 ## Two Approaches to Test Artifact
 In this section, we first discuss the setup used for evaluation reported in the paper and then specify the two approaches that can be used to evaluate this artifact.
 
+Note: In the artifact abstract submission, we mentioned three approaches to test the artifact. However, we were unable to upload the preconfigured VM due to its large size. Approach 1, discussed below, will also work inside a VM.
+
 ---
 ### Setup used for evaluation
 
@@ -346,7 +348,7 @@ FlexClone_Artifact_Eval/eval_scripts# ./main_fig.sh 8 1 	//Run single iteration 
 ```
 *Results:*
 ```
-- Results and corresponding plot are stored in "FlexClone_Artifact_Eval/eval_scripts/fig8_clone_time" directory
+- Results and corresponding plot (ssd_copying_file_data_evaluation.pdf) are stored in "FlexClone_Artifact_Eval/eval_scripts/fig8_clone_time" directory
 - Log file for the experiment is stored in "FlexClone_Artifact_Eval/eval_scripts/fig8_clone_time" directory with experiment timestamp being the name of the log file (Eg: log_20250926_181210).
 ```
 (Jump to: [Figures](#figures), [Tables](#tables))
@@ -381,7 +383,7 @@ FlexClone_Artifact_Eval/eval_scripts# ./main_fig.sh 9a 1 	//Run single iteration
 *Results:*
 ```
 - Results and corresponding plot are stored in "FlexClone_Artifact_Eval/eval_scripts/fig9a_throughput_block_aligned/fio_output/ssd" directory
-- For ease of access, plot is copied to "FlexClone_Artifact_Eval/eval_scripts/fig9a_throughput_block_aligned" directory
+- For ease of access, plot (ssd_coldCache_4096bs.pdf) is copied to "FlexClone_Artifact_Eval/eval_scripts/fig9a_throughput_block_aligned" directory
 - Log file for the experiment is stored in  "FlexClone_Artifact_Eval/eval_scripts/fig9a_throughput_block_aligned" directory with experiment timestamp being the name of the log file (Eg: log_20250926_181210).
 ```
 (Jump to: [Figures](#figures), [Tables](#tables))
@@ -416,7 +418,7 @@ FlexClone_Artifact_Eval/eval_scripts# ./main_fig.sh 9b 1 	//Run single iteration
 *Results:*
 ```
 - Results and corresponding plot are stored in "FlexClone_Artifact_Eval/eval_scripts/fig9b_throughput_non_block_aligned/fio_output/ssd" directory
-- For ease of access, plot is copied to "FlexClone_Artifact_Eval/eval_scripts/fig9b_throughput_non_block_aligned" directory
+- For ease of access, plot (ssd_coldCache_3072bs.pdf) is copied to "FlexClone_Artifact_Eval/eval_scripts/fig9b_throughput_non_block_aligned" directory
 - Log file for the experiment is stored in  "FlexClone_Artifact_Eval/eval_scripts/fig9b_throughput_non_block_aligned" directory with experiment timestamp being the name of the log file (Eg: log_20250926_181210).
 ```
 (Jump to: [Figures](#figures), [Tables](#tables))
@@ -452,7 +454,7 @@ FlexClone_Artifact_Eval/eval_scripts# ./main_fig.sh 10a 1 	//Run single iteratio
 *Results:*
 ```
 - Results and corresponding plot are stored in "FlexClone_Artifact_Eval/eval_scripts/fig10a_multihreaded_randRead/fio_output/ssd" directory
-- For ease of access, plot is copied to "FlexClone_Artifact_Eval/eval_scripts/fig10a_multihreaded_randRead" directory
+- For ease of access, plot (ssd_randRead_coldCache_4096bs.pdf) is copied to "FlexClone_Artifact_Eval/eval_scripts/fig10a_multihreaded_randRead" directory
 - Log file for the experiment is stored in  "FlexClone_Artifact_Eval/eval_scripts/fig10a_multihreaded_randRead" directory with experiment timestamp being the name of the log file (Eg: log_20250926_181210).
 ```
 (Jump to: [Figures](#figures), [Tables](#tables))
@@ -488,7 +490,7 @@ FlexClone_Artifact_Eval/eval_scripts# ./main_fig.sh 10b 1 	//Run single iteratio
 *Results:*
 ```
 - Results and corresponding plot are stored in "FlexClone_Artifact_Eval/eval_scripts/fig10b_multihreaded_randWrite/fio_output/ssd" directory
-- For ease of access, plot is copied to "FlexClone_Artifact_Eval/eval_scripts/fig10b_multihreaded_randWrite" directory
+- For ease of access, plot (ssd_randWrite_coldCache_4096bs.pdf) is copied to "FlexClone_Artifact_Eval/eval_scripts/fig10b_multihreaded_randWrite" directory
 - Log file for the experiment is stored in  "FlexClone_Artifact_Eval/eval_scripts/fig10b_multihreaded_randWrite" directory with experiment timestamp being the name of the log file (Eg: log_20250926_181210).
 ```
 (Jump to: [Figures](#figures), [Tables](#tables))
@@ -524,7 +526,7 @@ FlexClone_Artifact_Eval/eval_scripts# ./main_fig.sh 11 1 	//Run single iteration
 *Results:*
 ```
 - Results and corresponding plot are stored in "FlexClone_Artifact_Eval/eval_scripts/fig11_write_to_par/fio_output/ssd" directory
-- For ease of access, plot is copied to "FlexClone_Artifact_Eval/eval_scripts/fig11_write_to_par" directory
+- For ease of access, plot (plot_write_to_par.pdf) is copied to "FlexClone_Artifact_Eval/eval_scripts/fig11_write_to_par" directory
 - Log file for the experiment is stored in  "FlexClone_Artifact_Eval/eval_scripts/fig11_write_to_par" directory with experiment timestamp being the name of the log file (Eg: log_20250926_181210).
 ```
 (Jump to: [Figures](#figures), [Tables](#tables))
@@ -559,7 +561,7 @@ FlexClone_Artifact_Eval/eval_scripts# ./main_fig.sh 12 1 	//Run single iteration
 *Results:*
 ```
 - Results and corresponding plot are stored in "FlexClone_Artifact_Eval/eval_scripts/fig12_recovery_using_version_count/fio_output/ssd" directory
-- For ease of access, plot is copied to "FlexClone_Artifact_Eval/eval_scripts/fig12_recovery_using_version_count" directory
+- For ease of access, plot (recovery_time.pdf) is copied to "FlexClone_Artifact_Eval/eval_scripts/fig12_recovery_using_version_count" directory
 - Log file for the experiment is stored in  "FlexClone_Artifact_Eval/eval_scripts/fig12_recovery_using_version_count" directory with experiment timestamp being the name of the log file (Eg: log_20250926_181210).
 ```
 (Jump to: [Figures](#figures), [Tables](#tables))
@@ -594,7 +596,7 @@ FlexClone_Artifact_Eval/eval_scripts# ./main_fig.sh 13a 1 	//Run single iteratio
 *Results:*
 ```
 - Results and corresponding plot are stored in "FlexClone_Artifact_Eval/eval_scripts/fig13a_cpu_util/fio_output/ssd" directory
-- For ease of access, plot is copied to "FlexClone_Artifact_Eval/eval_scripts/fig13a_cpu_util" directory
+- For ease of access, plot (plot_seqWrite_cpu_util.pdf) is copied to "FlexClone_Artifact_Eval/eval_scripts/fig13a_cpu_util" directory
 - Log file for the experiment is stored in  "FlexClone_Artifact_Eval/eval_scripts/fig13a_cpu_util" directory with experiment timestamp being the name of the log file (Eg: log_20250926_181210).
 ```
 (Jump to: [Figures](#figures), [Tables](#tables))
@@ -629,7 +631,7 @@ FlexClone_Artifact_Eval/eval_scripts# ./main_fig.sh 13b 1 	//Run single iteratio
 *Results:*
 ```
 - Results and corresponding plot are stored in "FlexClone_Artifact_Eval/eval_scripts/fig13b_cpu_util/fio_output/ssd" directory
-- For ease of access, plot is copied to "FlexClone_Artifact_Eval/eval_scripts/fig13b_cpu_util" directory
+- For ease of access, plot (plot_randWrite_cpu_util.pdf) is copied to "FlexClone_Artifact_Eval/eval_scripts/fig13b_cpu_util" directory
 - Log file for the experiment is stored in  "FlexClone_Artifact_Eval/eval_scripts/fig13b_cpu_util" directory with experiment timestamp being the name of the log file (Eg: log_20250926_181210).
 ```
 (Jump to: [Figures](#figures), [Tables](#tables))
@@ -663,7 +665,7 @@ FlexClone_Artifact_Eval/eval_scripts# ./main_fig.sh 14b 1 	//Run single iteratio
 *Results:*
 ```
 - Results and corresponding plot are stored in "FlexClone_Artifact_Eval/eval_scripts/ffig14b_filebench_overlayfsl/output" directory
-- For ease of access, plot is copied to "FlexClone_Artifact_Eval/eval_scripts/fig14b_filebench_overlayfs" directory
+- For ease of access, plot (ssd_out_filebench_child_ops_per_sec.pdf) is copied to "FlexClone_Artifact_Eval/eval_scripts/fig14b_filebench_overlayfs" directory
 - Log file for the experiment is stored in  "FlexClone_Artifact_Eval/eval_scripts/fig14b_filebench_overlayfs" directory with experiment timestamp being the name of the log file (Eg: log_20250926_181210).
 ```
 (Jump to: [Figures](#figures), [Tables](#tables))
@@ -695,7 +697,7 @@ FlexClone_Artifact_Eval/eval_scripts# ./main_fig.sh 15a 1 	//Run single iteratio
 *Results:*
 ```
 - Results and corresponding plot are stored in "FlexClone_Artifact_Eval/eval_scripts/fig15a_sqlite/output" directory
-- For ease of access, plot is copied to "FlexClone_Artifact_Eval/eval_scripts/fig15a_sqlite" directory
+- For ease of access, plot (sqlite_commit_flexclone.pdf) is copied to "FlexClone_Artifact_Eval/eval_scripts/fig15a_sqlite" directory
 - Log file for the experiment is stored in  "FlexClone_Artifact_Eval/eval_scripts/fig15a_sqlite" directory with experiment timestamp being the name of the log file (Eg: log_20250926_181210).
 ```
 (Jump to: [Figures](#figures), [Tables](#tables))
@@ -728,7 +730,7 @@ FlexClone_Artifact_Eval/eval_scripts# ./main_fig.sh 15b 1 	//Run single iteratio
 *Results:*
 ```
 - Results and corresponding plot are stored in "FlexClone_Artifact_Eval/eval_scripts/fig15b_sqlite/output" directory
-- For ease of access, plot is copied to "FlexClone_Artifact_Eval/eval_scripts/fig15b_sqlite" directory
+- For ease of access, plot (sqlite_commit_XFS.pdf) is copied to "FlexClone_Artifact_Eval/eval_scripts/fig15b_sqlite" directory
 - Log file for the experiment is stored in  "FlexClone_Artifact_Eval/eval_scripts/fig15b_sqlite" directory with experiment timestamp being the name of the log file (Eg: log_20250926_181210).
 ```
 (Jump to: [Figures](#figures), [Tables](#tables))
@@ -922,7 +924,7 @@ FlexClone_Artifact_Eval/eval_scripts# ./main_tab.sh 3
 
 *Experiment Goal:*
 ```
-Observe the performance of difference FlexClone modes (See-through, CoW and Open-share).
+Observe the performance of different FlexClone modes (See-through, CoW and Open-share).
 ```
 
 *Command:*
