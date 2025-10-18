@@ -47,6 +47,7 @@ echo "each partition will be of the size: $each_partition_size GB"
 if [[ $each_partition_size -lt $min_partition_size_GB ]]
 then
 	echo "Each partition size might be too low to continue. Using a bigger device is recommended..."
+	exit -1
 fi
 
 
