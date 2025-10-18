@@ -17,7 +17,7 @@ fi
 ##########################
 if [[ $# != 2 ]]
 then
-	echo "Usage: $0 <device name. Eg: /dev/vdb, /dev/nvme0n1>, /dev/nvme0n1 <device size in GB. Eg: 512>"
+	echo "Usage: $0 <device name. Eg: /dev/vdb, /dev/nvme0n1> <device size in GB. Eg: 512>"
 	exit -1
 fi
 
