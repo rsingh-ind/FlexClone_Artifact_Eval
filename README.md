@@ -664,7 +664,7 @@ FlexClone_Artifact_Eval/eval_scripts# ./main_fig.sh 14b 1 	//Run single iteratio
 ```
 *Results:*
 ```
-- Results and corresponding plot are stored in "FlexClone_Artifact_Eval/eval_scripts/ffig14b_filebench_overlayfsl/output" directory
+- Results and corresponding plot are stored in "FlexClone_Artifact_Eval/eval_scripts/fig14b_filebench_overlayfs/output" directory
 - For ease of access, plot (ssd_out_filebench_child_ops_per_sec.pdf) is copied to "FlexClone_Artifact_Eval/eval_scripts/fig14b_filebench_overlayfs" directory
 - Log file for the experiment is stored in  "FlexClone_Artifact_Eval/eval_scripts/fig14b_filebench_overlayfs" directory with experiment timestamp being the name of the log file (Eg: log_20250926_181210).
 ```
