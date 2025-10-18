@@ -57,7 +57,7 @@ fi
 echo "*****************************************"
 echo "Deleting partition table on the device"
 echo "*****************************************"
-dd if=/dev/zero of=$1  bs=4096 count=1
+dd if=/dev/zero of=$1  bs=1M count=1
 
 
 
