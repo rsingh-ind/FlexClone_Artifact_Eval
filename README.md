@@ -35,8 +35,6 @@ FlexClone_Artifact_Eval
 ## Two Approaches to Test Artifact
 In this section, we first discuss the setup used for evaluation reported in the paper and then specify the two approaches that can be used to evaluate this artifact.
 
-Note: In the artifact abstract submission, we mentioned three approaches to test the artifact. However, we were unable to upload the preconfigured VM due to its large size. Approach 1, discussed below, will also work inside a VM.
-
 ---
 ### Setup used for evaluation
 
