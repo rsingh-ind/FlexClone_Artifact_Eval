@@ -58,7 +58,7 @@ In this section, we first discuss the setup used for evaluation reported in the 
     # apt install git
     # git lfs install
 ```
-	- Run `auto_install.sh` script present inside `~/FlexClone_Artifact_Eval/linux_5.5.10` as a root user to automatically install the required dependencies and the Linux kernel containing FlexClone implementation.
+-   - Run `auto_install.sh` script present inside `~/FlexClone_Artifact_Eval/linux_5.5.10` as a root user to automatically install the required dependencies and the Linux kernel containing FlexClone implementation.
 ```
 	~/FlexClone_Artifact_Eval/linux_5.5.10# ./auto_install.sh
 ```
