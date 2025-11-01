@@ -53,7 +53,7 @@ In this section, we first discuss the setup used for evaluation reported in the 
 	- FlexClone has been tested on Ubuntu 24.04.3 LTS. Please install this Ubuntu version.
 
 - *Installing Linux kernel and required dependencies*
-    - Install `git` and `git LFS` before cloning the artifact repository as following:
+    - Install `git` and `git LFS` before cloning the artifact repository as follows:
 ```
     # apt install git
     # git lfs install
