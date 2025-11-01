@@ -25,7 +25,7 @@ echo "################################################"
 echo "Installing dependencies.."
 echo "Tentative time for completion: 30 mins"
 echo "################################################"
-yes | apt install git bc binutils bison dwarves flex gcc git gnupg2 gzip libelf-dev libncurses5-dev libssl-dev make openssl pahole perl-base rsync tar xz-utils vim btrfs-progs fio qemu-system-x86 gnuplot-x11 texlive-font-utils git-lfs fdisk 1>>$log
+yes | apt install git bc binutils bison dwarves flex gcc git gnupg2 gzip libelf-dev libncurses5-dev libssl-dev make openssl pahole perl-base rsync tar xz-utils vim btrfs-progs fio qemu-system-x86 gnuplot-x11 texlive-font-utils git-lfs fdisk libtool 1>>$log
 if [ $? != 0 ]
 then
 	echo "**** Failed to install dependencies ****"
@@ -42,10 +42,52 @@ fi
 #cp filebench /usr/local/bin/filebench
 curdir=$(pwd)
 cd "../eval_scripts/fig14b_filebench_overlayfs/filebench_src/filebench-1.5-alpha1"
+libtoolize
+if [ $? != 0 ]
+then
+	echo "**** Failed to install filebench: libtoolize failed ****"
+	exit -1
+fi
+aclocal
+if [ $? != 0 ]
+then
+	echo "**** Failed to install filebench: aclocal failed ****"
+	exit -1
+fi
+autoheader
+if [ $? != 0 ]
+then
+	echo "**** Failed to install filebench: autoheader failed ****"
+	exit -1
+fi
+automake --add-missing
+if [ $? != 0 ]
+then
+	echo "**** Failed to install filebench: automake failed ****"
+	exit -1
+fi
+autoconf
+if [ $? != 0 ]
+then
+	echo "**** Failed to install filebench: autoconf failed ****"
+	exit -1
+fi
+./configure
+if [ $? != 0 ]
+then
+	echo "**** Failed to install filebench: configure failed ****"
+	exit -1
+fi
+make
+if [ $? != 0 ]
+then
+	echo "**** Failed to install filebench: make failed ****"
+	exit -1
+fi
 make install
 if [ $? != 0 ]
 then
-	echo "**** Failed to install filebench ****"
+	echo "**** Failed to install filebench: make install failed ****"
 	exit -1
 fi
 cd $curdir
