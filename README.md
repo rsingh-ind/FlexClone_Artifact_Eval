@@ -74,7 +74,9 @@ In this section, we first discuss the setup used for evaluation reported in the 
 - *Creating partitions on SSD with filesystems*
 
 	-  Run `auto_setup.sh` script present inside `FlexClone_Artifact_Eval/` directory that automatically creates partitions on SSD and lays out filesystems on these partitions
-	- Note: This script sleeps internally while partitioning the disk.  No user input is required.
+	- Note: 
+        - This script sleeps internally while partitioning the disk.  **No user input is required**.
+        - **Unmount all partitions of the SSD before running the following script.**
 ```
 	FlexClone_Artifact_Eval/# ./auto_setup.sh <disk> <disk size in GB>
 ```
