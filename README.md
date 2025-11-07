@@ -56,6 +56,7 @@ In this section, we first discuss the setup used for evaluation reported in the 
     - Install `git` and `git LFS` before cloning the artifact repository as follows:
 ```
     # apt install git
+    # apt install git-lfs
     # git lfs install
 ```
 -   - Run `auto_install.sh` script present inside `~/FlexClone_Artifact_Eval/linux_5.5.10` as a root user to automatically install the required dependencies and the Linux kernel containing FlexClone implementation.
